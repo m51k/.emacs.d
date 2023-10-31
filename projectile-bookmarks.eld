@@ -1,0 +1,1 @@
+("~/.emacs.d/" "c:/Users/Nep/Projects/React Udemy/Expense Manager/")
