@@ -1,3 +1,8 @@
+;;; projectile-module.el --- settings for package projectile
+;;; Commentary:
+;; Configure package projectile
+;;; Code:
+
 (use-package projectile
   :config (projectile-mode)
   :custom ((projectile-completion-system 'ivy))
@@ -11,3 +16,4 @@
   :config (counsel-projectile-mode))
 
 (provide 'projectile-module)
+;;; projectile-module.el ends here

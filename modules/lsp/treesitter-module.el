@@ -1,3 +1,8 @@
+;;; treesitter-module.el --- settings for package treesitter
+;;; Commentary:
+;; Configure package treesitter
+;;; Code:
+
 (use-package tree-sitter
   :ensure t
   :config
@@ -10,3 +15,4 @@
   :after tree-sitter)
 
 (provide 'treesitter-module)
+;;; treesitter-module.el ends here

@@ -1,3 +1,8 @@
+;;; company-module-el --- settings for package company
+;;; Commentary:
+;; Configure package company
+;;; Code:
+
 (use-package company
   :ensure t
   :after lsp-mode
@@ -12,3 +17,4 @@
   :hook (company-mode . company-box-mode))
 
 (provide 'company-module)
+;;; company-module.el ends here

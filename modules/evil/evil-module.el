@@ -1,7 +1,13 @@
+;;; evil-module.el --- settings for evil mode
+;;; Commentary:
+;; Configure package evil and other related packages
+;;; Code:
+
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (use-package evil
   :init
+  (setq evil-want-keybinding nil)
   (setq evil-want-integration t)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
@@ -37,8 +43,9 @@
     "/" 'swiper))
 
 (with-eval-after-load 'evil-maps
- (define-key evil-motion-state-map (kbd "TAB") nil))
+  (define-key evil-motion-state-map (kbd "TAB") nil))
 
 (define-key evil-motion-state-map (kbd "TAB") 'indent-for-tab-command)
 
 (provide 'evil-module)
+;;; evil-module.el ends here

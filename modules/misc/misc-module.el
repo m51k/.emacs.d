@@ -1,3 +1,8 @@
+;;; misc-module.el --- settings for miscellaneous modules
+;;; Commentary:
+;; Configure miscelaneous packages
+;;; Code:
+
 (use-package smartparens
   :ensure t
   :config
@@ -12,3 +17,4 @@
   (setq which-key-idle-delay 1))
 
 (provide 'misc-module)
+;;; misc-module.el ends here

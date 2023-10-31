@@ -1,3 +1,8 @@
+;;; orgmode-module.el --- settings for org-mode
+;;; Commentary:
+;; Configure org mode
+;;; Code:
+
 (use-package org
   :mode (("\\.org$" . org-mode))
   :ensure org-plus-contrib
@@ -14,6 +19,7 @@
   (add-hook 'evil-org-mode-hook
             (lambda () (evil-org-set-key-theme)))
   (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)
+  (evil-org-agenda-set-keys))
 
-  (provide 'orgmode-module)
+(provide 'orgmode-module)
+;;; orgmode-module.el ends here

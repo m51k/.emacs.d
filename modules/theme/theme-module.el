@@ -1,3 +1,8 @@
+;;; theme-module.el --- settings for package doom-themes
+;;; Commentary:
+;; Configure package doom-themes
+;;; Code:
+
 (use-package doom-themes
   :ensure t
   :config
@@ -19,4 +24,4 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (provide 'theme-module)
-
+;;; theme-module.el ends here

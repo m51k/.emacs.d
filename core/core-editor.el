@@ -1,3 +1,8 @@
+;;; core-editor.el --- general editor settings
+;;; Commentary:
+;; General editor settings
+;;; Code:
+
 (setq inhibit-startup-message 1)
 (setq make-backup-files nil) ; stop creating ~ files
 (setq create-lockfiles nil)
@@ -24,3 +29,4 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (provide 'core-editor)
+;;; core-editor.el ends here

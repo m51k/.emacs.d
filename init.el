@@ -1,3 +1,8 @@
+;;; init.el --- initialize packages
+;;; Commentary:
+;; Initialize and load packages
+;;; Code:
+
 ;; Initialize package sources
 (require 'package)
 
@@ -27,11 +32,11 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/misc"))
 
 ;; Configure packages
-(setq evil-want-keybinding nil)
 
 (require 'core-editor)
 (require 'theme-module)
 (require 'modeline-module)
+(require 'evil-module)
 (require 'ivy-module)
 (require 'magit-module)
 (require 'projectile-module)
@@ -39,8 +44,9 @@
 (require 'treesitter-module)
 (require 'company-module)
 (require 'treemacs-module)
-(require 'evil-module)
 (require 'misc-module)
+
+(setq flycheck-emacs-lisp-load-path 'inherit)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -55,3 +61,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+;;; init.el ends here

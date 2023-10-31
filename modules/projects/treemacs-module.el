@@ -1,3 +1,8 @@
+;;; treemacs-module.el --- settings for package treemacs
+;;; Commentary:
+;; Configure package treemacs
+;;; Code:
+
 (use-package all-the-icons)
 
 (use-package treemacs
@@ -33,3 +38,4 @@
   :ensure t)
 
 (provide 'treemacs-module)
+;;; treemacs-module.el ends here

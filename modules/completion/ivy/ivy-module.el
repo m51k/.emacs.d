@@ -1,3 +1,8 @@
+;;; ivy-module.el --- settings for package ivy
+;;; Commentary:
+;; Configure package ivy
+;;; Code:
+
 (use-package swiper :ensure t)
 (use-package ivy
   :bind (:map ivy-minibuffer-map
@@ -24,3 +29,4 @@
   (counsel-mode 1))
 
 (provide 'ivy-module)
+;;; ivy-module.el ends here

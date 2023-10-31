@@ -1,3 +1,8 @@
+;;; lsp-mode-module.el --- settings for lsp
+;;; Commentary:
+;; Configure lsp mode
+;;; Code:
+
 (use-package web-mode
   :ensure t
   :mode ("\\.html?\\'" "\\.css?\\'")
@@ -29,3 +34,4 @@
   :init (global-flycheck-mode))
 
 (provide 'lsp-mode-module)
+;;; lsp-mode-module.el ends here
