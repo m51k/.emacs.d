@@ -24,4 +24,8 @@
   read-process-output-max (* 1024 1024)
   create-lockfiles nil)
 
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
 (provide 'lsp-mode-module)
