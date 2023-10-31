@@ -3,6 +3,7 @@
 /elpa
 /org-persist
 /transient
+/server
 .lsp-session-v1
 projectile-bookmarks.eld
 projectile.cache
