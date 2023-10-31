@@ -5,7 +5,7 @@
 (scroll-bar-mode -1)        ;; Disable scrollbar
 (tool-bar-mode -1)          ;; Disable toolbar
 (tooltip-mode -1)           ;; Disable tooltips
-(set-fringe-mode 10)        ;; idk 
+(set-fringe-mode 10)        ;; idk
 (menu-bar-mode -1)          ;; Disable menu bar
 (global-hl-line-mode)
 
@@ -13,6 +13,7 @@
 
 (column-number-mode)
 (global-display-line-numbers-mode t)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
