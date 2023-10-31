@@ -3,7 +3,6 @@
 (use-package evil
   :init
   (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
   :config
@@ -26,8 +25,6 @@
 
 (use-package evil-leader
   :ensure t
-  :init
-  (setq evil-want-keybinding nil)
   :config
   (global-evil-leader-mode)
   (evil-leader/set-leader "<SPC>")
@@ -38,5 +35,10 @@
     "fs" 'save-buffer                     ;; File Save
     "," 'counsel-switch-buffer
     "/" 'swiper))
+
+(with-eval-after-load 'evil-maps
+ (define-key evil-motion-state-map (kbd "TAB") nil))
+
+(define-key evil-motion-state-map (kbd "TAB") 'indent-for-tab-command)
 
 (provide 'evil-module)
