@@ -1,6 +1,7 @@
 /.cache
 /auto-save-list
 /elpa
+/eshell
 /org-persist
 /transient
 /server
