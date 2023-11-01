@@ -42,7 +42,8 @@
     "," 'counsel-switch-buffer
     "kb" 'kill-buffer
     "qq" 'quit-window
-    "/" 'swiper))
+    "/" 'swiper
+    "g" 'magit))
 
 (with-eval-after-load 'evil-maps
   (define-key evil-motion-state-map (kbd "TAB") nil))
