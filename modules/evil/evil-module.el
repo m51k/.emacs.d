@@ -40,6 +40,8 @@
     "pf" 'projectile-command-map          ;; Project File
     "fs" 'save-buffer                     ;; File Save
     "," 'counsel-switch-buffer
+    "kb" 'kill-buffer
+    "qq" 'quit-window
     "/" 'swiper))
 
 (with-eval-after-load 'evil-maps
