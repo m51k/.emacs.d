@@ -3,13 +3,15 @@
 ;; Configure package doom-themes
 ;;; Code:
 
-(use-package catppuccin-theme
+(use-package doom-themes
   :ensure t
   :config
-  (load-theme 'catppuccin :no-confirm)
-  :custom
-  (catppuccin-flavour 'mocha)
-  (catppuccin-reload))
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-monokai-classic t)
+  (setq doom-themes-treemacs-theme "doom-colors") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config))
 
 (use-package solaire-mode
   :ensure t
