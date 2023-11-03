@@ -29,6 +29,7 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/lsp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/projects"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/evil"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/org"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/misc"))
 
 ;; Configure packages
@@ -44,6 +45,7 @@
 (require 'treesitter-module)
 (require 'company-module)
 (require 'treemacs-module)
+(require 'orgmode-module)
 (require 'misc-module)
 
 (setq flycheck-emacs-lisp-load-path 'inherit)

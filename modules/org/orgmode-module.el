@@ -10,7 +10,9 @@
   (setq org-ellipsis "⤵")
   (setq org-hide-leading-stars t)
   (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t))
+  (setq org-src-tab-acts-natively t)
+  (setq org-startup-indented t)
+  (setq org-indent-mode t))
 
 (use-package evil-org
   :after org
