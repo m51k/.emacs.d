@@ -5,7 +5,6 @@
 
 (use-package org
   :mode (("\\.org$" . org-mode))
-  :ensure org-contrib
   :config
   (setq org-ellipsis "⤵")
   (setq org-hide-leading-stars t)
