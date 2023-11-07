@@ -6,12 +6,14 @@
 (use-package doom-themes
   :ensure t
   :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-monokai-classic t)
   (setq doom-themes-treemacs-theme "doom-colors") ; use "doom-colors" for less minimal icon theme
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config))
+  (doom-themes-treemacs-config))
+
+(use-package autothemer
+ :ensure t)
+
+(add-to-list 'custom-theme-load-path "~/.emacs.d/modules/theme")
+(load-theme 'oxocarbon t)
 
 (use-package solaire-mode
   :ensure t
