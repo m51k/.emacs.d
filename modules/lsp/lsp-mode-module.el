@@ -5,7 +5,7 @@
 
 (use-package web-mode
   :ensure t
-  :mode ("\\.html?\\'" "\\.css?\\'")
+  :mode ("\\.html?\\'" "\\.css?\\'" "\\.jsx?\\'" "\\.tsx?\\'")
   :config
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-auto-closing t))
