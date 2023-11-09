@@ -8,9 +8,5 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 30)))
 
-(use-package hide-mode-line
- :ensure t
- :hook (treemacs-mode . hide-mode-line-mode))
-
 (provide 'modeline-module)
 ;;; modeline-module.el ends here
