@@ -6,7 +6,7 @@
 (use-package doom-themes
   :ensure t
   :config
-  (load-theme 'doom-gruvbox t)
+  (load-theme 'doom-tomorrow-night t)
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
   (doom-themes-org-config))
