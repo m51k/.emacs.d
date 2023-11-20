@@ -40,10 +40,13 @@
     "pf" 'projectile-command-map          ;; Project File
     "fs" 'save-buffer                     ;; File Save
     "," 'counsel-switch-buffer
+    "bb" 'counsel-switch-buffer
     "kb" 'kill-buffer
     "qq" 'quit-window
+    "ff" 'find-file
     "/" 'swiper
-    "g" 'magit))
+    "ss" 'swiper
+    "gs" 'magit))
 
 (with-eval-after-load 'evil-maps
   (define-key evil-motion-state-map (kbd "TAB") nil))
