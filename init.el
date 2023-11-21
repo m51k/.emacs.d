@@ -35,8 +35,6 @@
 ;; Configure packages
 
 (require 'core-editor)
-(require 'theme-module)
-(require 'modeline-module)
 (require 'evil-module)
 (require 'ivy-module)
 (require 'magit-module)
@@ -47,6 +45,8 @@
 (require 'treemacs-module)
 (require 'orgmode-module)
 (require 'misc-module)
+(require 'theme-module)
+(require 'modeline-module)
 
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
