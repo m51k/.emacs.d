@@ -29,7 +29,7 @@
 (menu-bar-mode -1)          ;; Disable menu bar
 (global-hl-line-mode)
 
-(set-face-attribute 'default nil :font "Source Code Pro" :height 100)
+(set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
 
 (column-number-mode)
 (global-display-line-numbers-mode t)
