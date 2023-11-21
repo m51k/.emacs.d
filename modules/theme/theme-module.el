@@ -11,10 +11,10 @@
 ;;   (doom-themes-treemacs-config)
 ;;   (doom-themes-org-config))
 
-(use-package ef-themes
+(use-package modus-themes
   :ensure t
   :config
-  (load-theme 'ef-dark :no-confirm))
+  (load-theme 'modus-vivendi :no-confirm))
 
 (use-package solaire-mode
   :ensure t
