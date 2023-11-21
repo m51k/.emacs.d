@@ -3,15 +3,18 @@
 ;; Configure package doom-themes
 ;;; Code:
 
-(use-package doom-themes
+;; (use-package doom-themes
+;;   :ensure t
+;;   :config
+;;   (load-theme 'doom-tomorrow-night t)
+;;   (setq doom-themes-treemacs-theme "doom-colors")
+;;   (doom-themes-treemacs-config)
+;;   (doom-themes-org-config))
+
+(use-package ef-themes
   :ensure t
   :config
-  (load-theme 'doom-tomorrow-night t)
-  (setq doom-themes-treemacs-theme "doom-colors")
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config))
-(use-package autothemer
- :ensure t)
+  (load-theme 'ef-dark :no-confirm))
 
 (use-package solaire-mode
   :ensure t
