@@ -16,11 +16,6 @@
   :config
   (load-theme 'modus-vivendi :no-confirm))
 
-(use-package solaire-mode
-  :ensure t
-  :config
-  (solaire-global-mode))
-
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
