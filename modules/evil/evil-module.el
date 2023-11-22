@@ -35,10 +35,10 @@
   (global-evil-leader-mode)
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
-    "op" 'treemacs                        ;; Open Project
-    "oa" 'org-agenda                      ;; Open Agenda
-    "pf" 'projectile-command-map          ;; Project File
-    "fs" 'save-buffer                     ;; File Save
+    "op" 'treemacs
+    "oa" 'org-agenda
+    "pf" 'projectile-command-map
+    "fs" 'save-buffer
     "," 'counsel-switch-buffer
     "bb" 'counsel-switch-buffer
     "kb" 'kill-buffer
@@ -46,6 +46,12 @@
     "ff" 'find-file
     "/" 'swiper
     "ss" 'swiper
+    "ws" 'split-window-horizontally
+    "wv" 'split-window-vertically
+    "wh" 'evil-window-left
+    "wj" 'evil-window-down
+    "wk" 'evil-window-up
+    "wl" 'evil-window-right
     "gs" 'magit))
 
 (with-eval-after-load 'evil-maps
