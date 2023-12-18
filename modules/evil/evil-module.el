@@ -42,6 +42,7 @@
     "," 'counsel-switch-buffer
     "bb" 'counsel-switch-buffer
     "kb" 'kill-buffer
+    "kk" 'kill-buffer-and-window
     "qq" 'quit-window
     "ff" 'find-file
     "/" 'swiper
