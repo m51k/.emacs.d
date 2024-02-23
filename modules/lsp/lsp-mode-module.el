@@ -5,7 +5,7 @@
 
 (use-package web-mode
   :ensure t
-  :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.jsx?\\'" "\\.tsx?\\'")
+  :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.jsx?\\'" "\\.tsx?\\'" "\\.blade\\.php\\'")
   :config
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-auto-closing t))
@@ -13,6 +13,7 @@
 (use-package lsp-mode
   :hook
   ((web-mode . lsp-deferred)
+   (php-mode . lsp-deferred)
    (c-mode . lsp-deferred)
    (c++-mode . lsp-deferred)
    (lsp-mode . lsp-enable-which-key-integration))
