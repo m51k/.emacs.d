@@ -7,7 +7,7 @@
   :ensure t
   :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.jsx?\\'" "\\.tsx?\\'" "\\.blade\\.php\\'")
   :config
-  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-pairing nil)
   (setq web-mode-enable-auto-closing t))
 
 (use-package lsp-mode
