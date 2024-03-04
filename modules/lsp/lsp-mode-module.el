@@ -10,7 +10,11 @@
   (setq web-mode-enable-auto-pairing nil)
   (setq web-mode-enable-auto-closing t))
 
+(use-package php-mode
+  :ensure t)
+
 (use-package lsp-mode
+  :ensure t
   :hook
   ((web-mode . lsp-deferred)
    (php-mode . lsp-deferred)
