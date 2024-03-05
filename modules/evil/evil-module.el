@@ -36,9 +36,9 @@
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
     "tt"
-    (if (or (eq system-type 'gnu/linux) (eq system-type 'darwin)
-	    'vterm
-	    'eshell))
+    (if (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
+        'vterm
+      'eshell)
     "op" 'treemacs
     "oa" 'org-agenda
     "pf" 'projectile-command-map
