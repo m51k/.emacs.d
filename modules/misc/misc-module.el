@@ -16,8 +16,9 @@
   :config
   (setq which-key-idle-delay 1))
 
-(use-package vterm
-    :ensure t)
+(or (eq system-type 'gnu/linux) (eq system-type 'darwin)
+    (use-package vterm
+      :ensure t))
 
 (provide 'misc-module)
 ;;; misc-module.el ends here
