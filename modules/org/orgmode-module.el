@@ -14,13 +14,14 @@
   (setq org-indent-mode t))
 
 (use-package evil-org
+  :commands evil-org-mode
   :after org
-  :config
+  :init
   (add-hook 'org-mode-hook 'evil-org-mode)
+  :config
   (add-hook 'evil-org-mode-hook
-            (lambda () (evil-org-set-key-theme)))
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+            (lambda ()
+              (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 (provide 'orgmode-module)
 ;;; orgmode-module.el ends here
