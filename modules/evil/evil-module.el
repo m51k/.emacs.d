@@ -29,40 +29,5 @@
   :config
   (evil-collection-init))
 
-(use-package evil-leader
-  :ensure t
-  :config
-  (global-evil-leader-mode)
-  (evil-leader/set-leader "<SPC>")
-  (evil-leader/set-key
-    "tt"
-    (if (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
-        'vterm
-      'eshell)
-    "op" 'treemacs
-    "oa" 'org-agenda
-    "pf" 'projectile-command-map
-    "fs" 'save-buffer
-    "," 'counsel-switch-buffer
-    "bb" 'counsel-switch-buffer
-    "kb" 'kill-buffer
-    "kk" 'kill-buffer-and-window
-    "qq" 'quit-window
-    "ff" 'find-file
-    "/" 'swiper
-    "ss" 'swiper
-    "ws" 'split-window-horizontally
-    "wv" 'split-window-vertically
-    "wh" 'evil-window-left
-    "wj" 'evil-window-down
-    "wk" 'evil-window-up
-    "wl" 'evil-window-right
-    "gs" 'magit))
-
-(with-eval-after-load 'evil-maps
-  (define-key evil-motion-state-map (kbd "TAB") nil))
-
-(define-key evil-motion-state-map (kbd "TAB") 'indent-for-tab-command)
-
 (provide 'evil-module)
 ;;; evil-module.el ends here
