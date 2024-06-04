@@ -1,0 +1,548 @@
+#+title: my org config
+* big title
+** Basics
+*** Startup optimizations
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (setq gc-cons-threshold (* 50 1000 1000))
+
+#+end_src
+
+*** Initialize package sources
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (require 'package)
+
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
+
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents))
+
+  ;; Initialize use-package for non-linux
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+
+#+end_src
+
+*** Diminish
+#+begin_src emacs-lisp :tangle ./init.el
+
+    (use-package diminish
+      :ensure t)
+
+#+end_src
+
+*** Deal with all the files emacs likes to make everywhere
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (setq make-backup-files nil)
+  (setq create-lockfiles nil)
+  (setq auto-save-default nil)
+
+#+end_src
+
+*** Disable default splash screen
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (setq inhibit-startup-message 1)
+
+#+end_src
+
+*** Turn off ui elements
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1)
+  (set-fringe-mode 5)
+  (menu-bar-mode -1)
+
+#+end_src
+
+*** Font configuration
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
+
+#+end_src
+
+*** Keep the config folder clean
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package no-littering)
+  (setq auto-save-file-name-transforms
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+
+#+end_src
+
+*** Handle column numbers for different modes
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (global-display-line-numbers-mode t)
+
+  (dolist (mode '(org-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+#+end_src
+
+*** Shorten yes or no prompts
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (fset 'yes-or-no-p 'y-or-n-p)
+
+#+end_src
+
+*** Highlight current line
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (global-hl-line-mode)
+
+#+end_src
+
+** Keybindings
+*** Set escape to quit
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+#+end_src
+
+*** Leader-Key bindings
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package general
+    :after evil
+    :config
+    (general-create-definer leader-keys
+                            :states '(normal visual emacs)
+                            :prefix "SPC"
+                            :global-prefix "C-SPC")
+    (leader-keys
+      "tt" 'eshell
+      "fs" 'save-buffer
+      "kb" 'kill-buffer
+      "kk" 'kill-buffer-and-window
+      "qq" 'quit-window
+      "ff" 'find-file
+      "ws" 'split-window-horizontally
+      "wv" 'split-window-vertically
+      "wh" 'evil-window-left
+      "wj" 'evil-window-down
+      "wk" 'evil-window-up
+      "wl" 'evil-window-right
+      "cc" 'comment-line
+      "cr" 'comment-or-uncomment-region
+      "op" 'dired-jump
+      "s" 'swiper
+      "b" 'counsel-switch-buffer
+      "oal" 'org-agenda-list
+      "nl" 'org-roam-buffer-toggle
+      "nf" 'org-roam-node-find))
+
+  (general-auto-unbind-keys)
+
+#+end_src
+
+*** Evil mode
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package evil
+    :config
+    (evil-mode 1)
+    :custom
+    (evil-want-keybinding nil)
+    (evil-want-integration t)
+    (evil-want-C-u-scroll t)
+    (evil-want-C-i-jump nil)
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal))
+
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :config
+    (evil-collection-init))
+
+#+end_src
+
+*** Which key
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package which-key
+    :init (which-key-mode)
+    :config
+    (setq which-key-idle-delay 1))
+
+#+end_src
+
+** Completion
+*** Ivy
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package ivy
+      :bind (:map ivy-minibuffer-map
+             ("TAB" . ivy-alt-done)
+             ("C-n" . ivy-next-line)
+             ("C-p" . ivy-previous-line)
+             :map ivy-switch-buffer-map
+             ("C-p" . ivy-previous-line)
+             ("TAB" . ivy-done)
+             ("C-d" . ivy-switch-buffer-kill)
+             :map ivy-reverse-i-search-map
+             ("C-p" . ivy-previous-line)
+             ("C-d" . ivy-reverse-i-search-kill))
+      :config
+      (ivy-mode 1))
+
+#+end_src
+
+*** Nicer interface for ivy
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package ivy-rich
+    :init
+    (ivy-rich-mode 1))
+
+#+end_src
+
+*** Counsel
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package counsel
+    :config
+    (counsel-mode 1))
+
+#+end_src
+
+*** Swiper
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package swiper :ensure t)
+
+#+end_src
+
+*** Company
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package company
+    :ensure t
+    :after lsp-mode
+    :hook (lsp-mode . company-mode)
+    :bind (:map company-active-map
+           ("<tab>" . company-complete-selection))
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0))
+
+#+end_src
+
+*** Icons for company
+#+begin_src emacs-lisp :tangle ./init.el
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
+  
+#+end_src 
+
+** Project management
+*** Magit
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package magit
+    :ensure t
+    :general
+    (leader-keys
+      "gs" 'magit))
+
+#+end_src
+
+*** Projectile 
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package projectile
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :init
+    ;; Project folder
+    (when (file-directory-p "~/Projects")
+      (setq projectile-project-search-path '("~/Projects")))
+    (setq projectile-switch-project-action #'projectile-dired)
+    :general
+    (leader-keys
+      "p" 'projectile-command-map))
+
+#+end_src
+
+*** Counsel interface for projectile
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package counsel-projectile
+    :config (counsel-projectile-mode))
+
+#+end_src
+
+*** Bracket pair-matching
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (setq electric-pair-pairs '(
+                              (?\{ . ?\})
+                              (?\( . ?\))
+                              (?\[ . ?\])
+                              (?\" . ?\")
+                              ))
+  (electric-pair-mode t)
+
+#+end_src
+
+** Programming
+*** LSP
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package lsp-mode
+    :ensure t
+    :hook
+    ((web-mode . lsp-deferred)
+     (c-ts-mode . lsp-deferred)
+     (php-mode . lsp-deferred)
+     (robot-mode . lsp-mode)
+     (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp-deferred
+    :custom
+    gc-cons-threshold (* 100 1024 1024)
+    read-process-output-max (* 1024 1024)
+    create-lockfiles nil
+    (with-eval-after-load 'lsp-mode
+      (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
+      (lsp-register-client (make-lsp-client
+                            :new-connection (lsp-stdio-connection "robotframework-lsp")
+                            :activation-fn (lsp-activate-on "robot")
+                            :server-id 'robotframework-lsp))))
+
+#+end_src
+
+*** Web-Mode
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package web-mode
+    :ensure t
+    :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.blade\\.php\\'")
+    :config
+    (setq web-mode-enable-auto-pairing nil)
+    (setq web-mode-enable-auto-closing t))
+
+#+end_src
+
+*** PHP
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package php-mode
+    :ensure t)
+
+#+end_src
+
+*** Robot Framework (Python)
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package robot-mode
+    :ensure t)
+
+#+end_src
+
+*** Prettier code formatting
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package prettier
+    :ensure t
+    :hook ((web-mode . prettier-mode)))
+
+#+end_src
+
+*** Linter
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
+
+#+end_src
+
+*** Treesitter
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package tree-sitter
+    :ensure t
+    :config
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+#+end_src
+
+*** Treesitter language pack
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package tree-sitter-langs
+    :ensure t
+    :after tree-sitter)
+
+#+end_src
+
+** File Management
+*** Icons for Dired
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package treemacs-icons-dired
+    :hook (dired-mode . treemacs-icons-dired-enable-once)
+    :ensure t)
+
+#+end_src
+
+** Notes & Documentation
+*** Org Mode 
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package org
+    :mode (("\\.org$" . org-mode))
+    :config
+    (setq org-ellipsis "⤵")
+    (setq org-hide-leading-stars t)
+    (setq org-src-fontify-natively t)
+    (setq org-src-tab-acts-natively t)
+    (setq org-startup-indented t)
+    (setq org-indent-mode t)
+    (setq org-agenda-files '("~/org/agenda.org"))
+    :general
+    (leader-keys
+      "ots" 'org-time-stamp))
+
+#+end_src
+
+*** Org Roam
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package org-roam
+    :ensure t
+    :init
+    (setq org-roam-v2-ack t)
+    :custom
+    (org-roam-directory "~/Org")
+    :config
+    (org-roam-setup))
+
+#+end_src
+
+*** Org Roam Server
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package websocket
+      :after org-roam)
+
+  (use-package org-roam-ui
+      :after org-roam ;; or :after org
+  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+  ;;         a hookable mode anymore, you're advised to pick something yourself
+  ;;         if you don't care about startup time, use
+  ;;  :hook (after-init . org-roam-ui-mode)
+      :config
+      (setq org-roam-ui-sync-theme t
+            org-roam-ui-follow t
+            org-roam-ui-update-on-save t
+            org-roam-ui-open-on-start t))
+
+#+end_src
+
+*** Org Mode Evil compatibility
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package evil-org
+    :commands evil-org-mode
+    :after org
+    :init
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    :config
+    (add-hook 'evil-org-mode-hook
+              (lambda ()
+                (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))))
+    :general
+    (leader-keys
+      "ni" 'org-roam-node-insert))
+
+#+end_src
+
+** UI
+*** Theme
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package ef-themes
+    :ensure t
+    :init
+    (setq ef-dark-palette-overrides
+          '((bg-main "#111111")))
+    :config
+    (load-theme 'ef-dark :no-confirm))
+
+#+end_src
+
+*** Coloured Brackets
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+#+end_src
+
+*** Modeline
+#+begin_src emacs-lisp :tangle ./init.el
+  
+  (defun simple-mode-line-render (left right)
+    "Return a string of `window-width' length.
+  Containing LEFT, and RIGHT aligned respectively."
+    (let ((available-width
+           (- (window-total-width)
+              (+ (length (format-mode-line left))
+                 (length (format-mode-line right))))))
+      (append left
+              (list (format (format "%%%ds" available-width) ""))
+              right)))
+
+  (setq-default
+   mode-line-format
+   '((:eval
+      (simple-mode-line-render
+       ;; Left.
+       (quote ("%e"
+               mode-line-front-space
+               mode-line-mule-info
+               mode-line-client-mode
+               mode-line-modified
+               mode-line-remote
+               " "
+               mode-line-buffer-identification
+               evil-mode-line-tag
+               "%l:%c"
+               " %p"))
+       ;; Right.
+       (quote (" "
+               mode-line-frame-identification
+               vc-mode
+               " "
+               mode-line-modes
+               mode-line-misc-info))))))
+
+#+end_src
+
+*** Minions
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package minions
+    :config
+    (setq minions-mode-line-lighter ""
+          minions-mode-line-delimiters '("" . ""))
+    (minions-mode 1))
+
+#+end_src

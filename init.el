@@ -1,9 +1,5 @@
-;;; init.el --- initialize packages
-;;; Commentary:
-;; Initialize and load packages
-;;; Code:
+(setq gc-cons-threshold (* 50 1000 1000))
 
-;; Initialize package sources
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -21,48 +17,326 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; Load path for custom modules
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/core"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/keybinds"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/theme"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/completion/ivy"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/completion/company"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/lsp"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/projects"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/evil"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/org"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/misc"))
+(use-package diminish
+  :ensure t)
 
-;; Configure packages
+(setq make-backup-files nil)
+(setq create-lockfiles nil)
+(setq auto-save-default nil)
 
-(require 'core-editor)
-(require 'general-module)
-(require 'evil-module)
-(require 'ivy-module)
-(require 'magit-module)
-(require 'projectile-module)
-(require 'lsp-mode-module)
-(require 'treesitter-module)
-(require 'company-module)
-(require 'dired-module)
-(require 'orgmode-module)
-(require 'misc-module)
-(require 'theme-module)
-(require 'modeline-module)
+(setq inhibit-startup-message 1)
 
-(setq flycheck-emacs-lisp-load-path 'inherit)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(tooltip-mode -1)
+(set-fringe-mode 5)
+(menu-bar-mode -1)
 
+(set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
+
+(use-package no-littering)
+(setq auto-save-file-name-transforms
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+
+(global-display-line-numbers-mode t)
+
+(dolist (mode '(org-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(global-hl-line-mode)
+
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(use-package general
+  :after evil
+  :config
+  (general-create-definer leader-keys
+                          :states '(normal visual emacs)
+                          :prefix "SPC"
+                          :global-prefix "C-SPC")
+  (leader-keys
+    "tt" 'eshell
+    "fs" 'save-buffer
+    "kb" 'kill-buffer
+    "kk" 'kill-buffer-and-window
+    "qq" 'quit-window
+    "ff" 'find-file
+    "ws" 'split-window-horizontally
+    "wv" 'split-window-vertically
+    "wh" 'evil-window-left
+    "wj" 'evil-window-down
+    "wk" 'evil-window-up
+    "wl" 'evil-window-right
+    "cc" 'comment-line
+    "cr" 'comment-or-uncomment-region
+    "op" 'dired-jump
+    "s" 'swiper
+    "b" 'counsel-switch-buffer
+    "oal" 'org-agenda-list
+    "nl" 'org-roam-buffer-toggle
+    "nf" 'org-roam-node-find))
+
+(general-auto-unbind-keys)
+
+(use-package evil
+  :config
+  (evil-mode 1)
+  :custom
+  (evil-want-keybinding nil)
+  (evil-want-integration t)
+  (evil-want-C-u-scroll t)
+  (evil-want-C-i-jump nil)
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
+
+(use-package which-key
+  :init (which-key-mode)
+  :config
+  (setq which-key-idle-delay 1))
+
+(use-package ivy
+    :bind (:map ivy-minibuffer-map
+           ("TAB" . ivy-alt-done)
+           ("C-n" . ivy-next-line)
+           ("C-p" . ivy-previous-line)
+           :map ivy-switch-buffer-map
+           ("C-p" . ivy-previous-line)
+           ("TAB" . ivy-done)
+           ("C-d" . ivy-switch-buffer-kill)
+           :map ivy-reverse-i-search-map
+           ("C-p" . ivy-previous-line)
+           ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+(use-package counsel
+  :config
+  (counsel-mode 1))
+
+(use-package swiper :ensure t)
+
+(use-package company
+  :ensure t
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+         ("<tab>" . company-complete-selection))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+(use-package magit
+  :ensure t
+  :general
+  (leader-keys
+    "gs" 'magit))
+
+(use-package projectile
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :init
+  ;; Project folder
+  (when (file-directory-p "~/Projects")
+    (setq projectile-project-search-path '("~/Projects")))
+  (setq projectile-switch-project-action #'projectile-dired)
+  :general
+  (leader-keys
+    "p" 'projectile-command-map))
+
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
+
+(setq electric-pair-pairs '(
+                            (?\{ . ?\})
+                            (?\( . ?\))
+                            (?\[ . ?\])
+                            (?\" . ?\")
+                            ))
+(electric-pair-mode t)
+
+(use-package lsp-mode
+  :ensure t
+  :hook
+  ((web-mode . lsp-deferred)
+   (c-ts-mode . lsp-deferred)
+   (php-mode . lsp-deferred)
+   (robot-mode . lsp-mode)
+   (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp-deferred
+  :custom
+  gc-cons-threshold (* 100 1024 1024)
+  read-process-output-max (* 1024 1024)
+  create-lockfiles nil
+  (with-eval-after-load 'lsp-mode
+    (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
+    (lsp-register-client (make-lsp-client
+                          :new-connection (lsp-stdio-connection "robotframework-lsp")
+                          :activation-fn (lsp-activate-on "robot")
+                          :server-id 'robotframework-lsp))))
+
+(use-package web-mode
+  :ensure t
+  :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.blade\\.php\\'")
+  :config
+  (setq web-mode-enable-auto-pairing nil)
+  (setq web-mode-enable-auto-closing t))
+
+(use-package php-mode
+  :ensure t)
+
+(use-package robot-mode
+  :ensure t)
+
+(use-package prettier
+  :ensure t
+  :hook ((web-mode . prettier-mode)))
+
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+(use-package tree-sitter
+  :ensure t
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs
+  :ensure t
+  :after tree-sitter)
+
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once)
+  :ensure t)
+
+(use-package org
+  :mode (("\\.org$" . org-mode))
+  :config
+  (setq org-ellipsis "⤵")
+  (setq org-hide-leading-stars t)
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-startup-indented t)
+  (setq org-indent-mode t)
+  (setq org-agenda-files '("~/org/agenda.org"))
+  :general
+  (leader-keys
+    "ots" 'org-time-stamp))
+
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Org")
+  :config
+  (org-roam-setup))
+
+(use-package websocket
+    :after org-roam)
+
+(use-package org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
+(use-package evil-org
+  :commands evil-org-mode
+  :after org
+  :init
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  :config
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+              (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))))
+  :general
+  (leader-keys
+    "ni" 'org-roam-node-insert))
+
+(use-package ef-themes
+  :ensure t
+  :init
+  (setq ef-dark-palette-overrides
+        '((bg-main "#111111")))
+  :config
+  (load-theme 'ef-dark :no-confirm))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(defun simple-mode-line-render (left right)
+  "Return a string of `window-width' length.
+Containing LEFT, and RIGHT aligned respectively."
+  (let ((available-width
+         (- (window-total-width)
+            (+ (length (format-mode-line left))
+               (length (format-mode-line right))))))
+    (append left
+            (list (format (format "%%%ds" available-width) ""))
+            right)))
+
+(setq-default
+ mode-line-format
+ '((:eval
+    (simple-mode-line-render
+     ;; Left.
+     (quote ("%e"
+             mode-line-front-space
+             mode-line-mule-info
+             mode-line-client-mode
+             mode-line-modified
+             mode-line-remote
+             " "
+             mode-line-buffer-identification
+             evil-mode-line-tag
+             "%l:%c"
+             " %p"))
+     ;; Right.
+     (quote (" "
+             mode-line-frame-identification
+             vc-mode
+             " "
+             mode-line-modes
+             mode-line-misc-info))))))
+
+(use-package minions
+  :config
+  (setq minions-mode-line-lighter ""
+        minions-mode-line-delimiters '("" . ""))
+  (minions-mode 1))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ef-themes dired company-box company which-key solaire-mode smartparens rainbow-delimiters magit lsp-mode ivy-rich counsel-projectile)))
+   '(minions rainbow-delimiters ef-themes evil-org org-roam-ui websocket org-roam treemacs-icons-dired tree-sitter-langs tree-sitter flycheck prettier robot-mode php-mode web-mode lsp-mode counsel-projectile projectile magit company-box company counsel ivy-rich ivy which-key evil-collection evil general no-littering diminish)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-;;; init.el ends here
