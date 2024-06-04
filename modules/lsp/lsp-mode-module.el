@@ -37,7 +37,8 @@
 			  :server-id 'robotframework-lsp))))
 
 (use-package prettier
-  :ensure t)
+  :ensure t
+  :hook ((web-mode . prettier-mode)))
 
 (use-package flycheck
   :ensure t
