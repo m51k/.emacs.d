@@ -1,9 +1,5 @@
-(setq gc-cons-threshold 402653184
-      gc-cons-percentage 0.6)
-(defun startup/reset-gc ()
-  (setq gc-cons-threshold 16777216
-	gc-cons-percentage 0.1))
-(add-hook 'emacs-startup-hook 'startup/reset-gc)
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024))
 
 (require 'package)
 
