@@ -12,6 +12,7 @@
   (evil-want-keybinding nil)
   (evil-want-integration t)
   (evil-want-C-u-scroll t)
+  (evil-want-C-i-jump nil)
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
 
