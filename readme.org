@@ -1,0 +1,27 @@
+#+TITLE: My Emacs Config
+#+AUTHOR: Mikhail
+
+* Introduction
+This is my personal emacs config that I use for pretty much everything that it's able to do.
+I've separated everything into modules that are then loaded in =init.el=, the modules are sorted into folders as follows;
+| Module     | Purpose                                               |
+|------------+-------------------------------------------------------|
+| completion | Modules related to text/code completion               |
+| evil       | Modules related to evil-mode (for vim motions)        |
+| keybinds   | Modules related to mapping keybinds                   |
+| lsp        | Modules related to lsp, or anything language specific |
+| org        | Modules related to org-mode                           |
+| projects   | Modules related to project management                 |
+| theme      | Modules related to configuring the theme and visuals  |
+| misc       | Modules that cannot be sorted into any of the above   |
+
+* Setup
+Nothing special here, just clone the repo into your home folder and install the icon font (treemacs uses these)
+#+begin_src shell
+git clone https://github.com/m51k/.emacs.d.git
+#+end_src
+And then do =M-x all-the-icons-install-fonts=
+
+* Notes
+I've doomed myself to a lifetime of fiddling with this config, this will always be WIP.
+=vterm= doesn't work on windows, so this is setup to use =elisp= instead if used on a windows system.
