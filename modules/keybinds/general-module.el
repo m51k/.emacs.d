@@ -27,9 +27,9 @@
     "wl" 'evil-window-right
     "cc" 'comment-line
     "cr" 'comment-or-uncomment-region
-    "op" 'treemacs
-    "/" 'swiper
-    "," 'counsel-switch-buffer
+    "op" 'dired-jump
+    "s" 'swiper
+    "b" 'counsel-switch-buffer
     "oal" 'org-agenda-list))
 
 (general-auto-unbind-keys)
