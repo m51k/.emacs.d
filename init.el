@@ -23,6 +23,7 @@
 
 ;; Load path for custom modules
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/core"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/keybinds"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/theme"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/completion/ivy"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/modules/completion/company"))
@@ -35,6 +36,7 @@
 ;; Configure packages
 
 (require 'core-editor)
+(require 'general-module)
 (require 'evil-module)
 (require 'ivy-module)
 (require 'magit-module)
