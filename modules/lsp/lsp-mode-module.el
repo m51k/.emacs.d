@@ -36,6 +36,9 @@
 			  :activation-fn (lsp-activate-on "robot")
 			  :server-id 'robotframework-lsp))))
 
+(use-package prettier
+  :ensure t)
+
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
