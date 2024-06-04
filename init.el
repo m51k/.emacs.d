@@ -3,9 +3,9 @@
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-  			    :ref nil :depth 1
-  			    :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-  			    :build (:not elpaca--activate-package)))
+			      :ref nil :depth 1
+			      :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+			      :build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
        (order (cdr elpaca-order))
@@ -15,20 +15,20 @@
     (make-directory repo t)
     (when (< emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
-      (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-  	       ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-  					       ,@(when-let ((depth (plist-get order :depth)))
-  						   (list (format "--depth=%d" depth) "--no-single-branch"))
-  					       ,(plist-get order :repo) ,repo))))
-  	       ((zerop (call-process "git" nil buffer t "checkout"
-  				     (or (plist-get order :ref) "--"))))
-  	       (emacs (concat invocation-directory invocation-name))
-  	       ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-  				     "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-  	       ((require 'elpaca))
-  	       ((elpaca-generate-autoloads "elpaca" repo)))
-  	  (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-  	(error "%s" (with-current-buffer buffer (buffer-string))))
+	(if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+		 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+						 ,@(when-let ((depth (plist-get order :depth)))
+						     (list (format "--depth=%d" depth) "--no-single-branch"))
+						 ,(plist-get order :repo) ,repo))))
+		 ((zerop (call-process "git" nil buffer t "checkout"
+				       (or (plist-get order :ref) "--"))))
+		 (emacs (concat invocation-directory invocation-name))
+		 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+				       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+		 ((require 'elpaca))
+		 ((elpaca-generate-autoloads "elpaca" repo)))
+	    (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+	  (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
   (unless (require 'elpaca-autoloads nil t)
     (require 'elpaca)
@@ -90,6 +90,14 @@
 (use-package no-littering
   :demand t)
 
+(use-package delight
+  :ensure (:wait t)
+  :demand t)
+
+(use-package emacs
+  :ensure nil
+  :delight (eldoc-mode abbrev-mode))
+
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (use-package general
@@ -125,7 +133,7 @@
     "wj" 'evil-window-down
     "wk" 'evil-window-up
     "wl" 'evil-window-right)
-  :diminish evil-mode
+  :delight evil-mode
   :custom
   (evil-want-keybinding nil)
   (evil-want-integration t)
@@ -136,14 +144,14 @@
 
 (use-package evil-collection
   :after evil
-  :diminish evil-collection-unimpaired-mode
+  :delight evil-collection-unimpaired-mode
   :ensure t
   :config
   (evil-collection-init))
 
 (use-package which-key
   :init (which-key-mode)
-  :diminish which-key-mode
+  :delight which-key-mode
   :config
   (setq which-key-idle-delay 1))
 
@@ -152,8 +160,8 @@
   :init
   (vertico-mode)
   :bind (:map vertico-map
-  	    ("C-j" . vertico-next)
-  	    ("C-k" . vertico-previous))
+	      ("C-j" . vertico-next)
+	      ("C-k" . vertico-previous))
   :config
   (setq vertico-cycle t)
   (setq vertico-resize nil))
@@ -189,11 +197,11 @@
 (use-package corfu
   :demand t
   :bind (:map corfu-map
-  	    ("C-j" . corfu-next)
-  	    ("C-k" . corfu-previous)
-  	    ("TAB" . corfu-insert)
-  	    ([tab] . corfu-insert)
-  	    ("C-f" . corfu-insert))
+	      ("C-j" . corfu-next)
+	      ("C-k" . corfu-previous)
+	      ("TAB" . corfu-insert)
+	      ([tab] . corfu-insert)
+	      ("C-f" . corfu-insert))
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -209,7 +217,7 @@
 (use-package magit
   :after general
   :demand t
-  :diminish magit-auto-revert-mode
+  :delight magit-auto-revert-mode
   :config
   (leader-keys
     "gs" 'magit))
@@ -273,12 +281,12 @@
 
 (use-package flycheck
   :demand t
-  :diminish flycheck-mode
+  :delight flycheck-mode
   :init (global-flycheck-mode))
 
 (use-package tree-sitter
   :demand t
-  :diminish tree-sitter-mode
+  :delight tree-sitter-mode
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
@@ -290,6 +298,7 @@
 (use-package org
   :ensure (:wait t)
   :demand t
+  :delight auto-revert-mode
   :mode (("\\.org$" . org-mode))
   :config
   (setq org-src-fontify-natively t)
@@ -331,13 +340,13 @@
   :after org
   :demand t
   :commands evil-org-mode
-  :diminish evil-org-mode
+  :delight evil-org-mode
   :init
   (add-hook 'org-mode-hook 'evil-org-mode)
   :config
   (add-hook 'evil-org-mode-hook
-  	  (lambda ()
-  	    (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
+	    (lambda ()
+	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -365,6 +374,3 @@
   :demand t
   :config
   (load-theme 'moe-dark :no-confirm))
-
-(use-package diminish
-  :demand t)

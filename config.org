@@ -148,6 +148,24 @@
 
 #+end_src
 
+*** Delight
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package delight
+    :ensure (:wait t)
+    :demand t) 
+
+#+end_src
+
+*** Builtin
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package emacs
+    :ensure nil
+    :delight (eldoc-mode abbrev-mode)) 
+
+#+end_src
+
 ** Keybindings
 *** Set escape to quit
 #+begin_src emacs-lisp :tangle ./init.el
@@ -197,7 +215,7 @@
       "wj" 'evil-window-down
       "wk" 'evil-window-up
       "wl" 'evil-window-right)
-    :diminish evil-mode
+    :delight evil-mode
     :custom
     (evil-want-keybinding nil)
     (evil-want-integration t)
@@ -208,7 +226,7 @@
 
   (use-package evil-collection
     :after evil
-    :diminish evil-collection-unimpaired-mode
+    :delight evil-collection-unimpaired-mode
     :ensure t
     :config
     (evil-collection-init))
@@ -220,7 +238,7 @@
 
   (use-package which-key
     :init (which-key-mode)
-    :diminish which-key-mode
+    :delight which-key-mode
     :config
     (setq which-key-idle-delay 1))
 
@@ -323,7 +341,7 @@
   (use-package magit
     :after general
     :demand t
-    :diminish magit-auto-revert-mode
+    :delight magit-auto-revert-mode
     :config
     (leader-keys
       "gs" 'magit))
@@ -433,7 +451,7 @@
 
   (use-package flycheck
     :demand t
-    :diminish flycheck-mode
+    :delight flycheck-mode
     :init (global-flycheck-mode))
 
 #+end_src
@@ -443,7 +461,7 @@
 
   (use-package tree-sitter
     :demand t
-    :diminish tree-sitter-mode
+    :delight tree-sitter-mode
     :config
     (global-tree-sitter-mode)
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
@@ -466,6 +484,7 @@
   (use-package org
     :ensure (:wait t)
     :demand t
+    :delight auto-revert-mode
     :mode (("\\.org$" . org-mode))
     :config
     (setq org-src-fontify-natively t)
@@ -522,7 +541,7 @@
     :after org
     :demand t
     :commands evil-org-mode
-    :diminish evil-org-mode
+    :delight evil-org-mode
     :init
     (add-hook 'org-mode-hook 'evil-org-mode)
     :config
@@ -572,13 +591,5 @@
     :demand t
     :config
     (load-theme 'moe-dark :no-confirm))
-
-#+end_src
-
-*** Diminish
-#+begin_src emacs-lisp :tangle ./init.el
-
-  (use-package diminish
-    :demand t)
 
 #+end_src
