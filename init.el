@@ -69,8 +69,8 @@
     "cc" 'comment-line
     "cr" 'comment-or-uncomment-region
     "op" 'dired-jump
-    "s" 'swiper
-    "b" 'counsel-switch-buffer
+    "s" 'consult-line
+    "b" 'consult-buffer
     "oal" 'org-agenda-list
     "nl" 'org-roam-buffer-toggle
     "nf" 'org-roam-node-find))
@@ -102,45 +102,61 @@
   :config
   (setq which-key-idle-delay 1))
 
-(use-package ivy
-  :diminish ivy-mode
-  :bind (:map ivy-minibuffer-map
-              ("TAB" . ivy-alt-done)
-              ("C-n" . ivy-next-line)
-              ("C-p" . ivy-previous-line)
-              :map ivy-switch-buffer-map
-              ("C-p" . ivy-previous-line)
-              ("TAB" . ivy-done)
-              ("C-d" . ivy-switch-buffer-kill)
-              :map ivy-reverse-i-search-map
-              ("C-p" . ivy-previous-line)
-              ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1))
-
-(use-package ivy-rich
-  :init (ivy-rich-mode 1))
-
-(use-package counsel
-  :config (counsel-mode 1)
-  :diminish counsel-mode)
-
-(use-package swiper :ensure t)
-
-(use-package company
+(use-package vertico
   :ensure t
-  :diminish company-mode
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
-  :bind (:map company-active-map
-         ("<tab>" . company-complete-selection))
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0))
+  :init
+  (vertico-mode)
+  :bind (:map vertico-map
+              ("C-j" . vertico-next)
+              ("C-k" . vertico-previous))
+  :config
+  (setq vertico-cycle t)
+  (setq vertico-resize nil))
 
-(use-package company-box
-  :diminish company-box-mode
-  :hook (company-mode . company-box-mode))
+(use-package savehist
+  :init
+  (savehist-mode))
+
+(use-package marginalia
+  :after vertico
+  :ensure t
+  :config
+  (marginalia-mode 1))
+
+(use-package orderless
+  :ensure t
+  :config
+  (setq completion-styles '(orderless basic)))
+
+(use-package consult
+  :ensure t
+  :config
+  (setq consult-narrow-key "<")
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-function (lambda (_) (projectile-project-root))))
+
+(use-package embark
+  :ensure t
+  :bind (("C-." . embark-act)))
+
+(use-package embark-consult
+  :ensure t)
+
+(use-package corfu
+  :bind (:map corfu-map
+              ("C-j" . corfu-next)
+              ("C-k" . corfu-previous)
+              ("TAB" . corfu-insert)
+              ([tab] . corfu-insert)
+              ("C-f" . corfu-insert))
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-preview-current nil)
+  (corfu-quit-at-boundary t)
+  (corfu-quit-no-match t)
+  :init
+  (global-corfu-mode))
 
 (use-package magit
   :ensure t
@@ -155,7 +171,6 @@
 (use-package projectile
   :config (projectile-mode)
   :diminish projectile-mode
-  :custom ((projectile-completion-system 'ivy))
   :init
   ;; Project folder
   (when (file-directory-p "~/Projects")
@@ -164,9 +179,6 @@
   :general
   (leader-keys
     "p" 'projectile-command-map))
-
-(use-package counsel-projectile
-  :config (counsel-projectile-mode))
 
 (setq electric-pair-pairs '(
                             (?\{ . ?\})
@@ -178,23 +190,25 @@
 
 (use-package lsp-mode
   :ensure t
-  :hook
-  ((web-mode . lsp-deferred)
-   (c-ts-mode . lsp-deferred)
-   (php-mode . lsp-deferred)
-   (robot-mode . lsp-mode)
-   (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp-deferred
   :custom
-  gc-cons-threshold (* 100 1024 1024)
-  read-process-output-max (* 1024 1024)
-  create-lockfiles nil
+  (lsp-completion-provider :none)
   (with-eval-after-load 'lsp-mode
     (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
     (lsp-register-client (make-lsp-client
                           :new-connection (lsp-stdio-connection "robotframework-lsp")
                           :activation-fn (lsp-activate-on "robot")
-                          :server-id 'robotframework-lsp))))
+                          :server-id 'robotframework-lsp)))
+  :init
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless)))
+  :hook
+  ((lsp-completion-mode . my/lsp-mode-setup-completion)
+   (web-mode . lsp-deferred)
+   (php-mode . lsp-deferred)
+   (robot-mode . lsp-mode)
+   (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp-deferred)
 
 (use-package web-mode
   :ensure t
@@ -333,16 +347,3 @@
 ;; this was the only way i could remove it from my modeline
 (with-eval-after-load 'org-indent
    (diminish 'org-indent-mode))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(no-littering which-key web-mode treemacs-icons-dired tree-sitter-langs robot-mode rainbow-delimiters prettier powerline php-mode org-roam-ui moe-theme magit lsp-mode ivy-rich general flycheck evil-org evil-collection diminish counsel-projectile company-box)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
