@@ -35,6 +35,10 @@
 (global-display-line-numbers-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(setq initial-scratch-message "\
+;; no thoughts, head empty
+")
+
 ;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
 		term-mode-hook
