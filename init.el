@@ -240,22 +240,26 @@
   ((php-mode web-mode) . eglot-ensure)
   :config
   (add-to-list 'eglot-server-programs
-	       '(php-mode . ("emacs-lsp-booster" "-q" "--" "intelephense" "--stdio")))
+	       '(php-mode . ("intelephense" "--stdio")))
   (add-to-list 'eglot-server-programs
-	       '(web-mode :language-id "php" . ("emacs-lsp-booster" "-q" "--" "intelephense" "--stdio"))))
+	       '(blade-mode . ("intelephense" "--stdio"))))
 
 (use-package eglot-booster
-  :ensure (:host github :repo "jdtsmith/eglot-booster" :branch "main")
+  :ensure (:host github :repo "jdtsmith/eglot-booster")
   :after eglot
   :demand t
   :config (eglot-booster-mode))
 
 (use-package web-mode
   :demand t
-  :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.blade\\.php\\'")
+  :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'")
   :config
   (setq web-mode-enable-auto-pairing nil)
-  (setq web-mode-enable-auto-closing t))
+  (setq web-mode-enable-auto-closing t)
+  (define-derived-mode blade-mode web-mode "Blade")
+  (setq auto-mode-alist
+	(append '(("\\.blade\\.php\\'" . blade-mode))
+		auto-mode-alist)))
 
 (use-package php-mode
   :demand t)
