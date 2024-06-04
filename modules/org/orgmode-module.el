@@ -11,7 +11,11 @@
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
   (setq org-startup-indented t)
-  (setq org-indent-mode t))
+  (setq org-indent-mode t)
+  (setq org-agenda-files '("~/org/agenda.org"))
+  :general
+  (leader-keys
+    "ots" 'org-time-stamp))
 
 (use-package evil-org
   :commands evil-org-mode
