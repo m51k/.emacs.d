@@ -30,7 +30,9 @@
     "op" 'dired-jump
     "s" 'swiper
     "b" 'counsel-switch-buffer
-    "oal" 'org-agenda-list))
+    "oal" 'org-agenda-list
+    "nl" 'org-roam-buffer-toggle
+    "nf" 'org-roam-node-find))
 
 (general-auto-unbind-keys)
 
