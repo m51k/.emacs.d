@@ -30,8 +30,7 @@
     "op" 'treemacs
     "/" 'swiper
     "," 'counsel-switch-buffer
-    "oal" 'org-agenda-list
-    "pf" 'projectile-command-map))
+    "oal" 'org-agenda-list))
 
 (general-auto-unbind-keys)
 

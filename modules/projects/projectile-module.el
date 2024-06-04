@@ -10,7 +10,10 @@
   ;; Project folder
   (when (file-directory-p "~/Projects")
     (setq projectile-project-search-path '("~/Projects")))
-  (setq projectile-switch-project-action #'projectile-dired))
+  (setq projectile-switch-project-action #'projectile-dired)
+  :general
+  (leader-keys
+    "p" 'projectile-command-map))
 
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
