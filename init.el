@@ -323,11 +323,13 @@
   (load-theme 'moe-dark :no-confirm))
 
 (use-package diminish
-  :diminish (abbrev-mode)
   :ensure t)
 
 (use-package eldoc
   :diminish eldoc-mode)
 
 (use-package autorevert
-  :diminish (auto-revert-mode))
+  :diminish auto-revert-mode)
+
+(use-package emacs
+  :diminish abbrev-mode)

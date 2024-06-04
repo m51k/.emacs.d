@@ -530,14 +530,16 @@
 *** Diminish
 #+begin_src emacs-lisp :tangle ./init.el
 
-  (use-package diminish
-    :diminish (abbrev-mode)
-    :ensure t)
+    (use-package diminish
+      :ensure t)
 
-  (use-package eldoc
-    :diminish eldoc-mode)
+    (use-package eldoc
+      :diminish eldoc-mode)
 
-  (use-package autorevert
-    :diminish (auto-revert-mode))
+    (use-package autorevert
+      :diminish auto-revert-mode)
+
+    (use-package emacs
+      :diminish abbrev-mode)
 
 #+end_src
