@@ -11,7 +11,7 @@
   (general-create-definer leader-keys
 			  :states '(normal visual emacs)
 			  :prefix "SPC"
-			  :non-normal-prefix "SPC")
+			  :global-prefix "C-SPC")
   (leader-keys
     "tt"
     (if (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
