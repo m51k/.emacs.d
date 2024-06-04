@@ -133,6 +133,8 @@
     "wj" 'evil-window-down
     "wk" 'evil-window-up
     "wl" 'evil-window-right)
+  (add-to-list 'evil-emacs-state-modes 'nov-mode)
+  (add-to-list 'evil-insert-state-modes 'eshell)
   :delight evil-mode
   :custom
   (evil-want-keybinding nil)
@@ -374,3 +376,9 @@
   :demand t
   :config
   (load-theme 'moe-dark :no-confirm))
+
+(use-package nov
+  :ensure (nov :depth nil)
+  :mode ("\\.epub\\'" . nov-mode)
+  :commands
+  (nov-mode))
