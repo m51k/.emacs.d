@@ -321,18 +321,13 @@
                 mode-line-misc-info
                 mode-line-end-spaces))
 
-;; (use-package ef-themes
-;;   :ensure t
-;;   :init
-;;   (setq ef-dark-palette-overrides
-;;         '((bg-main "#111111")))
-;;   :config
-;;   (load-theme 'ef-dark :no-confirm))
-
-(use-package moe-theme
+(use-package ef-themes
   :ensure t
+  :init
+  (setq ef-dark-palette-overrides
+        '((bg-main "#0a0a0a")))
   :config
-  (load-theme 'moe-dark :no-confirm))
+  (load-theme 'ef-dark :no-confirm))
 
 (use-package diminish
   :diminish (abbrev-mode)
