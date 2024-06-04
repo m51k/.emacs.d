@@ -229,9 +229,7 @@
   (use-package consult
     :ensure t
     :config
-    (setq consult-narrow-key "<")
-    (autoload 'projectile-project-root "projectile")
-    (setq consult-project-function (lambda (_) (projectile-project-root))))
+    (setq consult-narrow-key "<"))
 
 #+end_src
 
@@ -281,20 +279,23 @@
 
 #+end_src
 
-*** Projectile 
+*** Project.el
 #+begin_src emacs-lisp :tangle ./init.el
 
-  (use-package projectile
-    :config (projectile-mode)
-    :diminish projectile-mode
-    :init
-    ;; Project folder
-    (when (file-directory-p "~/Projects")
-      (setq projectile-project-search-path '("~/Projects")))
-    (setq projectile-switch-project-action #'projectile-dired)
+  (use-package project
+    :ensure t)
+
+#+end_src
+
+*** Consult Project 
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package consult-project-extra
+    :ensure t
     :general
     (leader-keys
-      "p" 'projectile-command-map))
+     "pf" 'consult-project-extra-find
+     "po" 'consult-project-extra-find-other-window))
 
 #+end_src
 
