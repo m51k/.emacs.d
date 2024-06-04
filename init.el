@@ -171,7 +171,8 @@
   :demand t
   :bind (:map corfu-map
 	      ("TAB" . corfu-insert)
-	      ([tab] . corfu-insert))
+	      ([tab] . corfu-insert)
+	      ("RET" . nil))
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -251,23 +252,11 @@
 
 (use-package flycheck
   :demand t
-  :init (global-flycheck-mode)
-  :config
-  (defun my-promote-flycheck (&optional _file)
-    "Give `flycheck-mode' priority position in `minor-mode-alist'.
-
-Called via `after-load-functions', as well as `after-init-hook'."
-    (unless (eq (caar minor-mode-alist) 'flycheck-mode)
-      (let ((found (assq 'flycheck-mode minor-mode-alist)))
-	(when found
-          (assq-delete-all 'flycheck-mode minor-mode-alist)
-          (push found minor-mode-alist)))))
-
-  (add-hook 'after-load-functions 'my-promote-flycheck)
-  (add-hook 'after-init-hook 'my-promote-flycheck))
+  :init (global-flycheck-mode))
 
 (use-package tree-sitter
   :demand t
+  :delight
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
