@@ -41,6 +41,9 @@
 
 (global-hl-line-mode)
 
+(use-package no-littering
+  :ensure t)
+
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (use-package general
@@ -330,3 +333,16 @@
 ;; this was the only way i could remove it from my modeline
 (with-eval-after-load 'org-indent
    (diminish 'org-indent-mode))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(no-littering which-key web-mode treemacs-icons-dired tree-sitter-langs robot-mode rainbow-delimiters prettier powerline php-mode org-roam-ui moe-theme magit lsp-mode ivy-rich general flycheck evil-org evil-collection diminish counsel-projectile company-box)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

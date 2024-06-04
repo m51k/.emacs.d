@@ -89,6 +89,14 @@
 
 #+end_src
 
+*** Highlight current line
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package no-littering
+    :ensure t)
+
+#+end_src
+
 ** Keybindings
 *** Set escape to quit
 #+begin_src emacs-lisp :tangle ./init.el
