@@ -171,15 +171,17 @@
 *** General.el
 #+begin_src emacs-lisp :tangle ./init.el
 
-      (use-package general
-        :ensure (:wait t)
-        :demand t
-        :config
-        (general-auto-unbind-keys)
-        (general-create-definer global-leader
-          :prefix "C-c")
-        (global-leader
-  	"t" 'eshell))
+  (use-package general
+    :ensure (:wait t)
+    :demand t
+    :config
+    (general-auto-unbind-keys)
+    (general-create-definer global-leader
+      :prefix "C-c")
+    (global-leader
+      "t" 'eshell
+      "ec" 'flymake-start
+      "es" 'consult-flymake))
 
 #+end_src
 
@@ -409,15 +411,6 @@
   (use-package prettier
     :demand t
     :hook ((web-mode . prettier-mode)))
-
-#+end_src
-
-*** Linter
-#+begin_src emacs-lisp :tangle ./init.el
-
-  (use-package flycheck
-    :demand t
-    :init (global-flycheck-mode))
 
 #+end_src
 

@@ -107,7 +107,9 @@
   (general-create-definer global-leader
     :prefix "C-c")
   (global-leader
-	"t" 'eshell))
+    "t" 'eshell
+    "ec" 'flymake-start
+    "es" 'consult-flymake))
 
 ;; (use-package evil
 ;;   :demand t
@@ -249,10 +251,6 @@
 (use-package prettier
   :demand t
   :hook ((web-mode . prettier-mode)))
-
-(use-package flycheck
-  :demand t
-  :init (global-flycheck-mode))
 
 (use-package tree-sitter
   :demand t
