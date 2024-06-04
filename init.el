@@ -141,9 +141,13 @@
 
 (use-package magit
   :ensure t
+  :diminish magit-auto-revert-mode
   :general
   (leader-keys
     "gs" 'magit))
+
+(use-package autorevert
+  :delight auto-revert-mode)
 
 (use-package projectile
   :config (projectile-mode)
@@ -329,5 +333,11 @@ Containing LEFT, and RIGHT aligned respectively."
              mode-line-misc-info))))))
 
 (use-package diminish
-  :diminish (eldoc-mode abbrev-mode auto-revert-mode)
+  :diminish (abbrev-mode)
   :ensure t)
+
+(use-package eldoc
+  :diminish eldoc-mode)
+
+(use-package autorevert
+  :diminish (auto-revert-mode))

@@ -242,13 +242,16 @@
 ** Project management
 *** Magit
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package magit
     :ensure t
+    :diminish magit-auto-revert-mode
     :general
     (leader-keys
       "gs" 'magit))
 
+  (use-package autorevert
+    :delight auto-revert-mode)
 #+end_src
 
 *** Projectile 
@@ -412,10 +415,6 @@
      (leader-keys
        "ots" 'org-time-stamp))
 
-  ;; this was the only way i could remove it from my modeline
-  (with-eval-after-load 'org-indent
-     (diminish 'org-indent-mode))
-
 #+end_src
 
 *** Org Roam
@@ -537,7 +536,16 @@
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package diminish
-    :diminish (eldoc-mode abbrev-mode auto-revert-mode)
+    :diminish (abbrev-mode)
     :ensure t)
 
+  (use-package eldoc
+    :diminish eldoc-mode)
+
+  (use-package autorevert
+    :diminish (auto-revert-mode))
+
+  ;; this was the only way i could remove it from my modeline
+  (with-eval-after-load 'org-indent
+     (diminish 'org-indent-mode))
 #+end_src
