@@ -4,7 +4,7 @@
 * Introduction
 This is my personal emacs config that I use for pretty much everything that it's able to do.
 I've separated everything into modules that are then loaded in =init.el=, the modules are sorted into folders as follows;
-| Module     | Purpose                                               |
+| Folder     | Purpose                                               |
 |------------+-------------------------------------------------------|
 | completion | Modules related to text/code completion               |
 | evil       | Modules related to evil-mode (for vim motions)        |
