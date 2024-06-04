@@ -28,7 +28,8 @@
     "wj" 'evil-window-down
     "wk" 'evil-window-up
     "wl" 'evil-window-right
-    "cc" 'comment-or-uncomment-region
+    "cc" 'comment-line
+    "cr" 'comment-or-uncomment-region
     "op" 'treemacs
     "/" 'swiper
     "," 'counsel-switch-buffer
