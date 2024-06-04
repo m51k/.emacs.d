@@ -23,7 +23,7 @@
     "qq" 'quit-window
     "ff" 'find-file
     "ws" 'split-window-horizontally
-    "wv" 'split-window-vertially
+    "wv" 'split-window-vertically
     "wh" 'evil-window-left
     "wj" 'evil-window-down
     "wk" 'evil-window-up
