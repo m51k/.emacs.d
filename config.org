@@ -474,13 +474,18 @@
 *** Theme
 #+begin_src emacs-lisp :tangle ./init.el
 
-  (use-package ef-themes
+  ;; (use-package ef-themes
+  ;;   :ensure t
+  ;;   :init
+  ;;   (setq ef-dark-palette-overrides
+  ;;         '((bg-main "#111111")))
+  ;;   :config
+  ;;   (load-theme 'ef-dark :no-confirm))
+
+  (use-package moe-theme
     :ensure t
-    :init
-    (setq ef-dark-palette-overrides
-          '((bg-main "#111111")))
     :config
-    (load-theme 'ef-dark :no-confirm))
+    (load-theme 'moe-dark :no-confirm))
 
 #+end_src
 

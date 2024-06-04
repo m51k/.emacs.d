@@ -231,22 +231,18 @@
   :ensure t)
 
 (use-package org
-   :mode (("\\.org$" . org-mode))
-   :config
-   (setq org-ellipsis "â¤µ")
-   (setq org-hide-leading-stars t)
-   (setq org-src-fontify-natively t)
-   (setq org-src-tab-acts-natively t)
-   (setq org-startup-indented t)
-   (setq org-indent-mode t)
-   (setq org-agenda-files '("~/org/agenda.org"))
-   :general
-   (leader-keys
-     "ots" 'org-time-stamp))
-
-;; this was the only way i could remove it from my modeline
-(with-eval-after-load 'org-indent
-   (diminish 'org-indent-mode))
+  :mode (("\\.org$" . org-mode))
+  :config
+  (setq org-ellipsis "â¤µ")
+  (setq org-hide-leading-stars t)
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-startup-indented t)
+  (setq org-indent-mode t)
+  (setq org-agenda-files '("~/org/agenda.org"))
+  :general
+  (leader-keys
+    "ots" 'org-time-stamp))
 
 (use-package org-roam
   :ensure t
@@ -286,13 +282,18 @@
   (leader-keys
     "ni" 'org-roam-node-insert))
 
-(use-package ef-themes
+;; (use-package ef-themes
+;;   :ensure t
+;;   :init
+;;   (setq ef-dark-palette-overrides
+;;         '((bg-main "#111111")))
+;;   :config
+;;   (load-theme 'ef-dark :no-confirm))
+
+(use-package moe-theme
   :ensure t
-  :init
-  (setq ef-dark-palette-overrides
-        '((bg-main "#111111")))
   :config
-  (load-theme 'ef-dark :no-confirm))
+  (load-theme 'moe-dark :no-confirm))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -341,3 +342,7 @@ Containing LEFT, and RIGHT aligned respectively."
 
 (use-package autorevert
   :diminish (auto-revert-mode))
+
+;; this was the only way i could remove it from my modeline
+(with-eval-after-load 'org-indent
+   (diminish 'org-indent-mode))
