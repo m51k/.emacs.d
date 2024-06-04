@@ -16,7 +16,7 @@ I've separated everything into modules that are then loaded in =init.el=, the mo
 | misc       | Modules that cannot be sorted into any of the above   |
 
 * Setup
-Nothing special here, just clone the repo into your home folder and install the icon font (treemacs uses these).
+Nothing special here, first download the font: [[https://github.com/protesilaos/iosevka-comfy][iosvka comfy]], then just clone the repo into your home folder and install the icon font (treemacs uses these).
 #+begin_src shell
 git clone https://github.com/m51k/.emacs.d.git
 #+end_src
