@@ -19,14 +19,22 @@ Containing LEFT, and RIGHT aligned respectively."
  '((:eval
     (simple-mode-line-render
      ;; Left.
-     (quote ("%e "
+     (quote ("%e"
+	     mode-line-front-space
+	     mode-line-mule-info
+	     mode-line-client-mode
+	     mode-line-modified
+	     mode-line-remote
+	     " "
              mode-line-buffer-identification
-             " %l : %c"
-             evil-mode-line-tag
-             "[%*]"))
+	     evil-mode-line-tag
+             "%l:%c"
+             " %p"))
      ;; Right.
-     (quote ("%p "
-             mode-line-frame-identification
+     (quote (" "
+	     mode-line-frame-identification
+	     vc-mode
+	     " "
              mode-line-modes
              mode-line-misc-info))))))
 
