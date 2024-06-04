@@ -3,11 +3,6 @@
 ;; Configure package doom-modeline
 ;;; Code:
 
-;; (use-package doom-modeline
-;;   :ensure t
-;;   :init (doom-modeline-mode 1)
-;;   :custom ((doom-modeline-height 30)))
-
 (defun simple-mode-line-render (left right)
   "Return a string of `window-width' length.
 Containing LEFT, and RIGHT aligned respectively."
