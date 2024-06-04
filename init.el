@@ -125,13 +125,8 @@
   :demand t
   :config
   (evil-mode 1)
-  (leader-keys
-    "wh" 'evil-window-left
-    "wj" 'evil-window-down
-    "wk" 'evil-window-up
-    "wl" 'evil-window-right)
-  (add-to-list 'evil-emacs-state-modes 'nov-mode)
   (evil-set-initial-state 'eshell-mode 'emacs)
+  (evil-set-initial-state 'dired-mode 'emacs)
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal)
   :delight evil-mode
@@ -140,13 +135,6 @@
   (evil-want-integration t)
   (evil-want-C-u-scroll t)
   (evil-want-C-i-jump nil))
-
-(use-package evil-collection
-  :after evil
-  :delight evil-collection-unimpaired-mode
-  :ensure t
-  :config
-  (evil-collection-init))
 
 (use-package which-key
   :init (which-key-mode)
@@ -210,12 +198,12 @@
 (use-package magit
   :after general
   :demand t
-  :delight magit-auto-revert-mode
   :config
   (leader-keys
     "gs" 'magit))
 
-(require 'project)
+(use-package project
+  :ensure nil)
 
 (use-package consult-project-extra
   :after general
@@ -233,22 +221,23 @@
                             ))
 (electric-pair-mode t)
 
-(use-package eglot
-  :ensure nil
+(use-package lsp-mode
   :demand t
+  :custom
+  (lsp-completion-provider :none) 
+  :init
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless)))
   :hook
-  ((php-mode web-mode) . eglot-ensure)
+  (lsp-completion-mode . my/lsp-mode-setup-completion)
+  ((php-mode web-mode) . lsp-mode)
   :config
-  (add-to-list 'eglot-server-programs
-	       '(php-mode . ("intelephense" "--stdio")))
-  (add-to-list 'eglot-server-programs
-	       '(blade-mode . ("intelephense" "--stdio"))))
-
-(use-package eglot-booster
-  :ensure (:host github :repo "jdtsmith/eglot-booster")
-  :after eglot
-  :demand t
-  :config (eglot-booster-mode))
+  (add-to-list 'lsp-language-id-configuration '((php-mode blade-mode) . "php"))
+  (lsp-register-client (make-lsp-client
+    			:new-connection (lsp-stdio-connection "emacs-lsp-booster -q -- intelephense")
+    			:activation-fn (lsp-activate-on "php")
+    			:server-id 'iph)))
 
 (use-package web-mode
   :demand t
@@ -273,12 +262,10 @@
 
 (use-package flycheck
   :demand t
-  :delight flycheck-mode
   :init (global-flycheck-mode))
 
 (use-package tree-sitter
   :demand t
-  :delight tree-sitter-mode
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
