@@ -5,7 +5,7 @@
 
 (use-package web-mode
   :ensure t
-  :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.jsx?\\'" "\\.tsx?\\'" "\\.blade\\.php\\'")
+  :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.blade\\.php\\'")
   :config
   (setq web-mode-enable-auto-pairing nil)
   (setq web-mode-enable-auto-closing t))
@@ -13,12 +13,14 @@
 (use-package php-mode
   :ensure t)
 
+(use-package robot-mode
+  :ensure t)
+
 (use-package lsp-mode
   :ensure t
   :hook
   ((web-mode . lsp-deferred)
-   (c-mode . lsp-deferred)
-   (c++-mode . lsp-deferred)
+   (c-ts-mode . lsp-deferred)
    (php-mode . lsp-deferred)
    (robot-mode . lsp-mode)
    (lsp-mode . lsp-enable-which-key-integration))
@@ -34,27 +36,9 @@
 			  :activation-fn (lsp-activate-on "robot")
 			  :server-id 'robotframework-lsp))))
 
-(use-package robot-mode
-  :ensure t)
-
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
-
-(use-package prettier-js)
-
-(defun enable-minor-mode (my-pair)
-  "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
-  (if (buffer-file-name)
-      (if (string-match (car my-pair) buffer-file-name)
-      (funcall (cdr my-pair)))))
-
-(add-hook 'web-mode-hook #'(lambda ()
-                            (enable-minor-mode
-                             '("\\.jsx?\\'" . prettier-js-mode))))
-(add-hook 'web-mode-hook #'(lambda ()
-                            (enable-minor-mode
-                             '("\\.tsx?\\'" . prettier-js-mode))))
 
 (provide 'lsp-mode-module)
 ;;; lsp-mode-module.el ends here
