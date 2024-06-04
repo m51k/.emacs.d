@@ -17,9 +17,6 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package diminish
-  :ensure t)
-
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
 (setq auto-save-default nil)
@@ -33,10 +30,6 @@
 (menu-bar-mode -1)
 
 (set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
-
-(use-package no-littering)
-(setq auto-save-file-name-transforms
-      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
 (global-display-line-numbers-mode t)
 
@@ -84,6 +77,7 @@
 (use-package evil
   :config
   (evil-mode 1)
+  :diminish evil-mode
   :custom
   (evil-want-keybinding nil)
   (evil-want-integration t)
@@ -94,42 +88,45 @@
 
 (use-package evil-collection
   :after evil
+  :diminish evil-collection-unimpaired-mode
   :ensure t
   :config
   (evil-collection-init))
 
 (use-package which-key
   :init (which-key-mode)
+  :diminish which-key-mode
   :config
   (setq which-key-idle-delay 1))
 
 (use-package ivy
-    :bind (:map ivy-minibuffer-map
-           ("TAB" . ivy-alt-done)
-           ("C-n" . ivy-next-line)
-           ("C-p" . ivy-previous-line)
-           :map ivy-switch-buffer-map
-           ("C-p" . ivy-previous-line)
-           ("TAB" . ivy-done)
-           ("C-d" . ivy-switch-buffer-kill)
-           :map ivy-reverse-i-search-map
-           ("C-p" . ivy-previous-line)
-           ("C-d" . ivy-reverse-i-search-kill))
-    :config
-    (ivy-mode 1))
+  :diminish ivy-mode
+  :bind (:map ivy-minibuffer-map
+              ("TAB" . ivy-alt-done)
+              ("C-n" . ivy-next-line)
+              ("C-p" . ivy-previous-line)
+              :map ivy-switch-buffer-map
+              ("C-p" . ivy-previous-line)
+              ("TAB" . ivy-done)
+              ("C-d" . ivy-switch-buffer-kill)
+              :map ivy-reverse-i-search-map
+              ("C-p" . ivy-previous-line)
+              ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
 
 (use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
+  :init (ivy-rich-mode 1))
 
 (use-package counsel
-  :config
-  (counsel-mode 1))
+  :config (counsel-mode 1)
+  :diminish counsel-mode)
 
 (use-package swiper :ensure t)
 
 (use-package company
   :ensure t
+  :diminish company-mode
   :after lsp-mode
   :hook (lsp-mode . company-mode)
   :bind (:map company-active-map
@@ -139,6 +136,7 @@
   (company-idle-delay 0))
 
 (use-package company-box
+  :diminish company-box-mode
   :hook (company-mode . company-box-mode))
 
 (use-package magit
@@ -149,6 +147,7 @@
 
 (use-package projectile
   :config (projectile-mode)
+  :diminish projectile-mode
   :custom ((projectile-completion-system 'ivy))
   :init
   ;; Project folder
@@ -209,10 +208,12 @@
 
 (use-package flycheck
   :ensure t
+  :diminish flycheck-mode
   :init (global-flycheck-mode))
 
 (use-package tree-sitter
   :ensure t
+  :diminish tree-sitter-mode
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
@@ -226,18 +227,22 @@
   :ensure t)
 
 (use-package org
-  :mode (("\\.org$" . org-mode))
-  :config
-  (setq org-ellipsis "⤵")
-  (setq org-hide-leading-stars t)
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-startup-indented t)
-  (setq org-indent-mode t)
-  (setq org-agenda-files '("~/org/agenda.org"))
-  :general
-  (leader-keys
-    "ots" 'org-time-stamp))
+   :mode (("\\.org$" . org-mode))
+   :config
+   (setq org-ellipsis "â¤µ")
+   (setq org-hide-leading-stars t)
+   (setq org-src-fontify-natively t)
+   (setq org-src-tab-acts-natively t)
+   (setq org-startup-indented t)
+   (setq org-indent-mode t)
+   (setq org-agenda-files '("~/org/agenda.org"))
+   :general
+   (leader-keys
+     "ots" 'org-time-stamp))
+
+;; this was the only way i could remove it from my modeline
+(with-eval-after-load 'org-indent
+   (diminish 'org-indent-mode))
 
 (use-package org-roam
   :ensure t
@@ -265,6 +270,7 @@
 
 (use-package evil-org
   :commands evil-org-mode
+  :diminish evil-org-mode
   :after org
   :init
   (add-hook 'org-mode-hook 'evil-org-mode)
@@ -322,21 +328,6 @@ Containing LEFT, and RIGHT aligned respectively."
              mode-line-modes
              mode-line-misc-info))))))
 
-(use-package minions
-  :config
-  (setq minions-mode-line-lighter ""
-        minions-mode-line-delimiters '("" . ""))
-  (minions-mode 1))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(minions rainbow-delimiters ef-themes evil-org org-roam-ui websocket org-roam treemacs-icons-dired tree-sitter-langs tree-sitter flycheck prettier robot-mode php-mode web-mode lsp-mode counsel-projectile projectile magit company-box company counsel ivy-rich ivy which-key evil-collection evil general no-littering diminish)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(use-package diminish
+  :diminish (eldoc-mode abbrev-mode auto-revert-mode)
+  :ensure t)

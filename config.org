@@ -30,14 +30,6 @@
 
 #+end_src
 
-*** Diminish
-#+begin_src emacs-lisp :tangle ./init.el
-
-    (use-package diminish
-      :ensure t)
-
-#+end_src
-
 *** Deal with all the files emacs likes to make everywhere
 #+begin_src emacs-lisp :tangle ./init.el
   
@@ -69,15 +61,6 @@
 #+begin_src emacs-lisp :tangle ./init.el
   
   (set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
-
-#+end_src
-
-*** Keep the config folder clean
-#+begin_src emacs-lisp :tangle ./init.el
-
-  (use-package no-littering)
-  (setq auto-save-file-name-transforms
-        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
 #+end_src
 
@@ -152,10 +135,11 @@
 
 *** Evil mode
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package evil
     :config
     (evil-mode 1)
+    :diminish evil-mode
     :custom
     (evil-want-keybinding nil)
     (evil-want-integration t)
@@ -166,6 +150,7 @@
 
   (use-package evil-collection
     :after evil
+    :diminish evil-collection-unimpaired-mode
     :ensure t
     :config
     (evil-collection-init))
@@ -174,9 +159,10 @@
 
 *** Which key
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package which-key
     :init (which-key-mode)
+    :diminish which-key-mode
     :config
     (setq which-key-idle-delay 1))
 
@@ -185,21 +171,22 @@
 ** Completion
 *** Ivy
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package ivy
-      :bind (:map ivy-minibuffer-map
-             ("TAB" . ivy-alt-done)
-             ("C-n" . ivy-next-line)
-             ("C-p" . ivy-previous-line)
-             :map ivy-switch-buffer-map
-             ("C-p" . ivy-previous-line)
-             ("TAB" . ivy-done)
-             ("C-d" . ivy-switch-buffer-kill)
-             :map ivy-reverse-i-search-map
-             ("C-p" . ivy-previous-line)
-             ("C-d" . ivy-reverse-i-search-kill))
-      :config
-      (ivy-mode 1))
+    :diminish ivy-mode
+    :bind (:map ivy-minibuffer-map
+                ("TAB" . ivy-alt-done)
+                ("C-n" . ivy-next-line)
+                ("C-p" . ivy-previous-line)
+                :map ivy-switch-buffer-map
+                ("C-p" . ivy-previous-line)
+                ("TAB" . ivy-done)
+                ("C-d" . ivy-switch-buffer-kill)
+                :map ivy-reverse-i-search-map
+                ("C-p" . ivy-previous-line)
+                ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
 
 #+end_src
 
@@ -207,17 +194,16 @@
 #+begin_src emacs-lisp :tangle ./init.el
   
   (use-package ivy-rich
-    :init
-    (ivy-rich-mode 1))
+    :init (ivy-rich-mode 1))
 
 #+end_src
 
 *** Counsel
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package counsel
-    :config
-    (counsel-mode 1))
+    :config (counsel-mode 1)
+    :diminish counsel-mode)
 
 #+end_src
 
@@ -230,9 +216,10 @@
 
 *** Company
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package company
     :ensure t
+    :diminish company-mode
     :after lsp-mode
     :hook (lsp-mode . company-mode)
     :bind (:map company-active-map
@@ -245,9 +232,11 @@
 
 *** Icons for company
 #+begin_src emacs-lisp :tangle ./init.el
-  (use-package company-box
-    :hook (company-mode . company-box-mode))
   
+  (use-package company-box
+    :diminish company-box-mode
+    :hook (company-mode . company-box-mode))
+
 #+end_src 
 
 ** Project management
@@ -264,9 +253,10 @@
 
 *** Projectile 
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package projectile
     :config (projectile-mode)
+    :diminish projectile-mode
     :custom ((projectile-completion-system 'ivy))
     :init
     ;; Project folder
@@ -365,18 +355,20 @@
 
 *** Linter
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package flycheck
     :ensure t
+    :diminish flycheck-mode
     :init (global-flycheck-mode))
 
 #+end_src
 
 *** Treesitter
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package tree-sitter
     :ensure t
+    :diminish tree-sitter-mode
     :config
     (global-tree-sitter-mode)
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
@@ -405,20 +397,24 @@
 ** Notes & Documentation
 *** Org Mode 
 #+begin_src emacs-lisp :tangle ./init.el
-  
-  (use-package org
-    :mode (("\\.org$" . org-mode))
-    :config
-    (setq org-ellipsis "⤵")
-    (setq org-hide-leading-stars t)
-    (setq org-src-fontify-natively t)
-    (setq org-src-tab-acts-natively t)
-    (setq org-startup-indented t)
-    (setq org-indent-mode t)
-    (setq org-agenda-files '("~/org/agenda.org"))
-    :general
-    (leader-keys
-      "ots" 'org-time-stamp))
+
+   (use-package org
+     :mode (("\\.org$" . org-mode))
+     :config
+     (setq org-ellipsis "⤵")
+     (setq org-hide-leading-stars t)
+     (setq org-src-fontify-natively t)
+     (setq org-src-tab-acts-natively t)
+     (setq org-startup-indented t)
+     (setq org-indent-mode t)
+     (setq org-agenda-files '("~/org/agenda.org"))
+     :general
+     (leader-keys
+       "ots" 'org-time-stamp))
+
+  ;; this was the only way i could remove it from my modeline
+  (with-eval-after-load 'org-indent
+     (diminish 'org-indent-mode))
 
 #+end_src
 
@@ -458,9 +454,10 @@
 
 *** Org Mode Evil compatibility
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package evil-org
     :commands evil-org-mode
+    :diminish evil-org-mode
     :after org
     :init
     (add-hook 'org-mode-hook 'evil-org-mode)
@@ -477,7 +474,7 @@
 ** UI
 *** Theme
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package ef-themes
     :ensure t
     :init
@@ -536,13 +533,11 @@
 
 #+end_src
 
-*** Minions
+*** Diminish
 #+begin_src emacs-lisp :tangle ./init.el
 
-  (use-package minions
-    :config
-    (setq minions-mode-line-lighter ""
-          minions-mode-line-delimiters '("" . ""))
-    (minions-mode 1))
+  (use-package diminish
+    :diminish (eldoc-mode abbrev-mode auto-revert-mode)
+    :ensure t)
 
 #+end_src
