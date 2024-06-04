@@ -285,6 +285,7 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
+(setq evil-mode-line-format '(before . mode-line-front-space))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -301,9 +302,7 @@
                 mode-line-modes
                 " "
                 mode-line-misc-info
-                mode-line-end-spaces))  
-
-(setq evil-mode-line-format '(before . mode-line-front-space))
+                mode-line-end-spaces))
 
 ;; (use-package ef-themes
 ;;   :ensure t
