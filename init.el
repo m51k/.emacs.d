@@ -118,7 +118,7 @@
   (evil-set-initial-state 'eshell-mode 'emacs)
   (evil-set-initial-state 'dired-mode 'emacs)
   (evil-set-initial-state 'magit-mode 'emacs)
-  (evil-set-initial-state 'text-mode 'emacs)
+  (evil-set-initial-state 'text-mode 'emacs) ;; this is for the magit commit message thing
   (evil-set-initial-state 'org-mode 'normal)
   :delight evil-mode
   :custom

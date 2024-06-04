@@ -1,7 +1,8 @@
-#+title: my org config
-* big title
-** Basics
-*** Package Manager
+#+title: Emacs Literate Config
+* Basics
+** Package Manager
+[[https://github.com/progfolio/elpacahttps://github.com/progfolio/elpaca][Elpaca]] is a package manager capable of installing packages asynchronously, it's much faster than package.el.
+*!! Make sure to enable symlink perms on windows !!*
 #+begin_src emacs-lisp :tangle ./init.el
 
   (defvar elpaca-installer-version 0.7)
@@ -51,7 +52,7 @@
 
 #+end_src
 
-*** Performance optimizations
+** Performance optimizations
 #+begin_src emacs-lisp :tangle ./init.el
 
   (setq gc-cons-threshold 100000000)
@@ -59,7 +60,7 @@
 
 #+end_src
 
-*** Deal with all the files emacs likes to make everywhere
+** Deal with all the files emacs likes to make everywhere
 #+begin_src emacs-lisp :tangle ./init.el
 
   (setq make-backup-files nil)
@@ -68,14 +69,14 @@
 
 #+end_src
 
-*** Disable default splash screen
+** Disable default splash screen
 #+begin_src emacs-lisp :tangle ./init.el
 
   (setq inhibit-startup-message 1)
 
 #+end_src
 
-*** Turn off ui elements
+** Turn off ui elements
 #+begin_src emacs-lisp :tangle ./init.el
 
   (scroll-bar-mode -1)
@@ -86,14 +87,15 @@
 
 #+end_src
 
-*** Font configuration
+** Font configuration
+The font used here is [[https://github.com/protesilaos/iosevka-comfy][Iosevka Comfy]], easy on the eyes.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
 
 #+end_src
 
-*** Handle column numbers for different modes
+** Handle column numbers for different modes
 #+begin_src emacs-lisp :tangle ./init.el
 
   (global-display-line-numbers-mode t)
@@ -104,21 +106,22 @@
 
 #+end_src
 
-*** Shorten yes or no prompts
+** Shorten yes or no prompts
 #+begin_src emacs-lisp :tangle ./init.el
 
   (fset 'yes-or-no-p 'y-or-n-p)
 
 #+end_src
 
-*** Highlight current line
+** Highlight current line
 #+begin_src emacs-lisp :tangle ./init.el
 
   (global-hl-line-mode)
 
 #+end_src
 
-*** Highlight current line
+** No littering
+Emacs packages like to throw their files around everywhere, this fixes that keeping the config file nice and tidy.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package no-littering
@@ -126,7 +129,8 @@
 
 #+end_src
 
-*** Delight
+** Delight
+Hide minor modes you dont need to see.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package delight
@@ -135,7 +139,7 @@
 
 #+end_src
 
-*** Builtin
+** Builtin
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package emacs
@@ -160,15 +164,16 @@
 
 #+end_src
 
-** Keybindings
-*** Set escape to quit
+* Keybindings
+** Set escape to quit
 #+begin_src emacs-lisp :tangle ./init.el
 
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 #+end_src
 
-*** General.el
+** General.el
+Specify Keybindings under this or per package.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package general
@@ -185,7 +190,8 @@
 
 #+end_src
 
-*** Evil mode
+** Evil mode
+Vim emulation, it's only used here for text/code editing, its default binds for anything else.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package evil
@@ -195,7 +201,7 @@
     (evil-set-initial-state 'eshell-mode 'emacs)
     (evil-set-initial-state 'dired-mode 'emacs)
     (evil-set-initial-state 'magit-mode 'emacs)
-    (evil-set-initial-state 'text-mode 'emacs)
+    (evil-set-initial-state 'text-mode 'emacs) ;; this is for the magit commit message thing
     (evil-set-initial-state 'org-mode 'normal)
     :delight evil-mode
     :custom
@@ -206,7 +212,8 @@
 
 #+end_src
 
-*** Which key
+** Which key
+In case I forget some binds
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package which-key
@@ -217,8 +224,8 @@
 
 #+end_src
 
-** Completion
-*** Vertico
+* Completion
+** Vertico
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package vertico
@@ -233,7 +240,7 @@
 
 #+end_src
 
-*** Marginialia
+** Marginialia
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package marginalia
@@ -244,7 +251,7 @@
 
 #+end_src
 
-*** Orderless
+** Orderless
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package orderless
@@ -254,7 +261,7 @@
 
 #+end_src
 
-*** Consult
+** Consult
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package consult
@@ -268,7 +275,7 @@
 
 #+end_src
 
-*** Consult
+** Consult
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package embark
@@ -280,7 +287,7 @@
 
 #+end_src
 
-*** Corfu
+** Corfu
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package corfu
@@ -300,8 +307,9 @@
 
 #+end_src
 
-** Project management
-*** Magit
+* Project management
+** Magit
+Git interface
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package transient
@@ -316,7 +324,7 @@
 
 #+end_src
 
-*** Project.el
+** Project.el
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package project
@@ -324,7 +332,7 @@
 
 #+end_src
 
-*** Consult Project 
+** Consult Project 
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package consult-project-extra
@@ -337,7 +345,7 @@
 
 #+end_src
 
-*** Bracket pair-matching
+** Bracket pair-matching
 #+begin_src emacs-lisp :tangle ./init.el
 
   (setq electric-pair-pairs '(
@@ -350,8 +358,8 @@
 
 #+end_src
 
-** Programming
-*** LSP
+* Programming
+** LSP
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package lsp-mode
@@ -381,7 +389,7 @@
 
 #+end_src
 
-*** Web-Mode
+** Web-Mode
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package web-mode
@@ -397,7 +405,7 @@
 
 #+end_src
 
-*** PHP
+** PHP
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package php-mode
@@ -405,7 +413,7 @@
 
 #+end_src
 
-*** Robot Framework (Python)
+** Robot Framework (Python)
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package robot-mode
@@ -413,7 +421,7 @@
 
 #+end_src
 
-*** Prettier code formatting
+** Prettier code formatting
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package prettier
@@ -422,7 +430,8 @@
 
 #+end_src
 
-*** Treesitter
+** Treesitter
+Syntax highlighting and indentation.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package tree-sitter
@@ -434,7 +443,7 @@
 
 #+end_src
 
-*** Treesitter language pack
+** Treesitter language pack
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package tree-sitter-langs
@@ -443,8 +452,8 @@
 
 #+end_src
 
-** Notes & Documentation
-*** Org Mode 
+* Notes & Documentation
+** Org Mode 
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package org
@@ -461,7 +470,7 @@
 
 #+end_src
 
-*** Org Roam
+** Org Roam
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package org-roam
@@ -480,7 +489,8 @@
 
 #+end_src
 
-*** Org Roam Server
+** Org Roam Server
+Who needs obsidian?
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package websocket
@@ -500,7 +510,8 @@
 
 #+end_src
 
-*** Org Mode Evil compatibility
+** Org Mode Evil compatibility
+I've turned this off for the time being to experiment with default binds.
 #+begin_src emacs-lisp :tangle ./init.el
  
   ;; (use-package evil-org
@@ -517,8 +528,8 @@
 
 #+end_src
 
-** UI
-*** Coloured Brackets
+* UI
+** Coloured Brackets
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package rainbow-delimiters
@@ -526,7 +537,7 @@
 
 #+end_src
 
-*** Modeline
+** Modeline
 #+begin_src emacs-lisp :tangle ./init.el
 
   (setq evil-mode-line-format '(after . mode-line-buffer-identification))
@@ -552,7 +563,8 @@
 
 #+end_src
 
-*** Theme
+** Theme
+Most important part of the config.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package moe-theme
