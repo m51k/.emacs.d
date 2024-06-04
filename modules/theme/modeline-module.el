@@ -1,6 +1,6 @@
-;;; modeline-module.el --- settings for package doom-modeline
+;;; modeline-module.el --- settings for modeline
 ;;; Commentary:
-;; Configure package doom-modeline
+;; Configure modeline
 ;;; Code:
 
 (defun simple-mode-line-render (left right)
