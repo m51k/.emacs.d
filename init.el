@@ -46,23 +46,6 @@
 (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024))
 
-;; (require 'package)
-
-;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-;;                          ("org" . "https://orgmode.org/elpa/")
-;;                          ("elpa" . "https://elpa.gnu.org/packages/")))
-
-;; (package-initialize)
-;; (unless package-archive-contents
-;;   (package-refresh-contents))
-
-;; ;; Initialize use-package for non-linux
-;; (unless (package-installed-p 'use-package)
-;;   (package-install 'use-package))
-
-;; (require 'use-package)
-;; (setq use-package-always-ensure t)
-
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
 (setq auto-save-default nil)
@@ -96,7 +79,23 @@
 
 (use-package emacs
   :ensure nil
-  :delight (eldoc-mode abbrev-mode))
+  :delight (eldoc-mode abbrev-mode)
+  :init
+  ;; TAB cycle if there are only few candidates
+  ;; (setq completion-cycle-threshold 3)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  ;; (setq tab-always-indent 'complete)
+
+  ;; Emacs 30 and newer: Disable Ispell completion function. As an alternative,
+  ;; try `cape-dict'.
+  ;; (setq text-mode-ispell-word-completion nil)
+
+  ;; Emacs 28 and newer: Hide commands in M-x which do not apply to the current
+  ;; mode.  Corfu commands are hidden, since they are not used via M-x. This
+  ;; setting is useful beyond Corfu.
+  (setq read-extended-command-predicate #'command-completion-default-include-p))
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -122,32 +121,32 @@
     "cr" 'comment-or-uncomment-region
     "op" 'dired-jump))
 
-;; (use-package evil
-;;   :demand t
-;;   :config
-;;   (evil-mode 1)
-;;   (leader-keys
-;;     "wh" 'evil-window-left
-;;     "wj" 'evil-window-down
-;;     "wk" 'evil-window-up
-;;     "wl" 'evil-window-right)
-;;   (add-to-list 'evil-emacs-state-modes 'nov-mode)
-;;   (add-to-list 'evil-insert-state-modes 'eshell)
-;;   :delight evil-mode
-;;   :custom
-;;   (evil-want-keybinding nil)
-;;   (evil-want-integration t)
-;;   (evil-want-C-u-scroll t)
-;;   (evil-want-C-i-jump nil)
-;;   (evil-set-initial-state 'messages-buffer-mode 'normal)
-;;   (evil-set-initial-state 'dashboard-mode 'normal))
+(use-package evil
+  :demand t
+  :config
+  (evil-mode 1)
+  (leader-keys
+    "wh" 'evil-window-left
+    "wj" 'evil-window-down
+    "wk" 'evil-window-up
+    "wl" 'evil-window-right)
+  (add-to-list 'evil-emacs-state-modes 'nov-mode)
+  (evil-set-initial-state 'eshell-mode 'emacs)
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal)
+  :delight evil-mode
+  :custom
+  (evil-want-keybinding nil)
+  (evil-want-integration t)
+  (evil-want-C-u-scroll t)
+  (evil-want-C-i-jump nil))
 
-;; (use-package evil-collection
-;;   :after evil
-;;   :delight evil-collection-unimpaired-mode
-;;   :ensure t
-;;   :config
-;;   (evil-collection-init))
+(use-package evil-collection
+  :after evil
+  :delight evil-collection-unimpaired-mode
+  :ensure t
+  :config
+  (evil-collection-init))
 
 (use-package which-key
   :init (which-key-mode)
@@ -234,27 +233,22 @@
                             ))
 (electric-pair-mode t)
 
-(use-package lsp-mode
+(use-package eglot
+  :ensure nil
   :demand t
-  :custom
-  (lsp-completion-provider :none)
-  (with-eval-after-load 'lsp-mode
-    (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
-    (lsp-register-client (make-lsp-client
-                          :new-connection (lsp-stdio-connection "robotframework-lsp")
-                          :activation-fn (lsp-activate-on "robot")
-                          :server-id 'robotframework-lsp)))
-  :init
-  (defun my/lsp-mode-setup-completion ()
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless)))
   :hook
-  ((lsp-completion-mode . my/lsp-mode-setup-completion)
-   (web-mode . lsp-deferred)
-   (php-mode . lsp-deferred)
-   (robot-mode . lsp-mode)
-   (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp-deferred)
+  ((php-mode web-mode) . eglot-ensure)
+  :config
+  (add-to-list 'eglot-server-programs
+	       '(php-mode . ("emacs-lsp-booster" "-q" "--" "intelephense" "--stdio")))
+  (add-to-list 'eglot-server-programs
+	       '(web-mode :language-id "php" . ("emacs-lsp-booster" "-q" "--" "intelephense" "--stdio"))))
+
+(use-package eglot-booster
+  :ensure (:host github :repo "jdtsmith/eglot-booster" :branch "main")
+  :after eglot
+  :demand t
+  :config (eglot-booster-mode))
 
 (use-package web-mode
   :demand t
@@ -303,6 +297,7 @@
     "ots" 'org-time-stamp))
 
 (use-package org-roam
+  :ensure (:depth 1)
   :demand t
   :init
   (setq org-roam-v2-ack t)
@@ -330,22 +325,22 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
-;; (use-package evil-org
-;;   :after org
-;;   :demand t
-;;   :commands evil-org-mode
-;;   :delight evil-org-mode
-;;   :init
-;;   (add-hook 'org-mode-hook 'evil-org-mode)
-;;   :config
-;;   (add-hook 'evil-org-mode-hook
-;; 	    (lambda ()
-;; 	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
+(use-package evil-org
+  :after org
+  :demand t
+  :commands evil-org-mode
+  :delight evil-org-mode
+  :init
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  :config
+  (add-hook 'evil-org-mode-hook
+	    (lambda ()
+	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;; (setq evil-mode-line-format '(before . mode-line-front-space))
+(setq evil-mode-line-format '(after . mode-line-buffer-identification))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -356,7 +351,7 @@
                 mode-line-frame-indentifcation
                 " "
                 mode-line-buffer-identification
-                "  "
+                " "
                 vc-mode
                 " "
                 mode-line-modes
