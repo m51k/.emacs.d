@@ -4,50 +4,50 @@
 *** Package Manager
 #+begin_src emacs-lisp :tangle ./init.el
 
-    (defvar elpaca-installer-version 0.7)
-    (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-    (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-    (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-    (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-				  :ref nil :depth 1
-				  :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-				  :build (:not elpaca--activate-package)))
-    (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-	   (build (expand-file-name "elpaca/" elpaca-builds-directory))
-	   (order (cdr elpaca-order))
-	   (default-directory repo))
-      (add-to-list 'load-path (if (file-exists-p build) build repo))
-      (unless (file-exists-p repo)
-	(make-directory repo t)
-	(when (< emacs-major-version 28) (require 'subr-x))
-	(condition-case-unless-debug err
-	    (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-		     ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-						     ,@(when-let ((depth (plist-get order :depth)))
-							 (list (format "--depth=%d" depth) "--no-single-branch"))
-						     ,(plist-get order :repo) ,repo))))
-		     ((zerop (call-process "git" nil buffer t "checkout"
-					   (or (plist-get order :ref) "--"))))
-		     (emacs (concat invocation-directory invocation-name))
-		     ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-					   "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-		     ((require 'elpaca))
-		     ((elpaca-generate-autoloads "elpaca" repo)))
-		(progn (message "%s" (buffer-string)) (kill-buffer buffer))
-	      (error "%s" (with-current-buffer buffer (buffer-string))))
-	  ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-      (unless (require 'elpaca-autoloads nil t)
-	(require 'elpaca)
-	(elpaca-generate-autoloads "elpaca" repo)
-	(load "./elpaca-autoloads")))
-    (add-hook 'after-init-hook #'elpaca-process-queues)
-    (elpaca `(,@elpaca-order))
+  (defvar elpaca-installer-version 0.7)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+  			      :ref nil :depth 1
+  			      :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+  			      :build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (< emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+  	(if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+  		 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+  						 ,@(when-let ((depth (plist-get order :depth)))
+  						     (list (format "--depth=%d" depth) "--no-single-branch"))
+  						 ,(plist-get order :repo) ,repo))))
+  		 ((zerop (call-process "git" nil buffer t "checkout"
+  				       (or (plist-get order :ref) "--"))))
+  		 (emacs (concat invocation-directory invocation-name))
+  		 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+  				       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+  		 ((require 'elpaca))
+  		 ((elpaca-generate-autoloads "elpaca" repo)))
+  	    (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+  	  (error "%s" (with-current-buffer buffer (buffer-string))))
+        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
 
-    ;; Install use-package support
-    (elpaca elpaca-use-package
-	    ;; Enable use-package :ensure support for Elpaca.
-	    (elpaca-use-package-mode)
-	    (setq use-package-always-ensure t))
+  ;; Install use-package support
+  (elpaca elpaca-use-package
+    ;; Enable use-package :ensure support for Elpaca.
+    (elpaca-use-package-mode)
+    (setq use-package-always-ensure t))
 
 #+end_src
 
@@ -83,7 +83,7 @@
 
 *** Deal with all the files emacs likes to make everywhere
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (setq make-backup-files nil)
   (setq create-lockfiles nil)
   (setq auto-save-default nil)
@@ -92,14 +92,14 @@
 
 *** Disable default splash screen
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (setq inhibit-startup-message 1)
 
 #+end_src
 
 *** Turn off ui elements
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (tooltip-mode -1)
@@ -110,7 +110,7 @@
 
 *** Font configuration
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
 
 #+end_src
@@ -128,14 +128,14 @@
 
 *** Shorten yes or no prompts
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (fset 'yes-or-no-p 'y-or-n-p)
 
 #+end_src
 
 *** Highlight current line
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (global-hl-line-mode)
 
 #+end_src
@@ -151,7 +151,7 @@
 ** Keybindings
 *** Set escape to quit
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 #+end_src
@@ -159,44 +159,29 @@
 *** Leader-Key bindings
 #+begin_src emacs-lisp :tangle ./init.el
 
-    (use-package general
-      :after evil
-      :ensure (:wait t)
-      :demand t
-      :config
-      (general-auto-unbind-keys)
-      (general-create-definer leader-keys
-			      :states '(normal visual emacs)
-			      :prefix "SPC"
-			      :global-prefix "C-SPC")
-      (leader-keys
-       "tt" 'eshell
-       "fs" 'save-buffer
-       "kb" 'kill-buffer
-       "kk" 'kill-buffer-and-window
-       "qq" 'quit-window
-       "ff" 'find-file
-       "ws" 'split-window-horizontally
-       "wv" 'split-window-vertically
-       "wh" 'evil-window-left
-       "wj" 'evil-window-down
-       "wk" 'evil-window-up
-       "wl" 'evil-window-right
-       "cc" 'comment-line
-       "cr" 'comment-or-uncomment-region
-       "op" 'dired-jump
-       "s" 'consult-line
-       "b" 'consult-buffer
-       "oal" 'org-agenda-list
-       "nl" 'org-roam-buffer-toggle
-       "nf" 'org-roam-node-find
-       "pf" 'consult-project-extra-find
-       "po" 'consult-project-extra-find-other-window
-       "gs" 'magit
-       "ots" 'org-time-stamp
-       "ni" 'org-roam-node-insert))
+  (use-package general
+    :ensure (:wait t)
+    :demand t
+    :config
+    (general-auto-unbind-keys)
+    (general-create-definer leader-keys
+      :states '(normal visual emacs)
+      :prefix "SPC"
+      :global-prefix "C-SPC")
+    (leader-keys
+      "tt" 'eshell
+      "fs" 'save-buffer
+      "kb" 'kill-buffer
+      "kk" 'kill-buffer-and-window
+      "qq" 'quit-window
+      "ff" 'find-file
+      "ws" 'split-window-horizontally
+      "wv" 'split-window-vertically
+      "cc" 'comment-line
+      "cr" 'comment-or-uncomment-region
+      "op" 'dired-jump))
 
-    (elpaca-wait)
+  (elpaca-wait)
 
 #+end_src
 
@@ -207,6 +192,11 @@
     :demand t
     :config
     (evil-mode 1)
+    (leader-keys
+      "wh" 'evil-window-left
+      "wj" 'evil-window-down
+      "wk" 'evil-window-up
+      "wl" 'evil-window-right)
     :diminish evil-mode
     :custom
     (evil-want-keybinding nil)
@@ -245,8 +235,8 @@
     :init
     (vertico-mode)
     :bind (:map vertico-map
-		("C-j" . vertico-next)
-		("C-k" . vertico-previous))
+  	      ("C-j" . vertico-next)
+  	      ("C-k" . vertico-previous))
     :config
     (setq vertico-cycle t)
     (setq vertico-resize nil))
@@ -273,7 +263,7 @@
     :demand t
     :config
     (setq completion-styles '(orderless basic)))
-  
+
 #+end_src
 
 *** Consult
@@ -282,7 +272,10 @@
   (use-package consult
     :demand t
     :config
-    (setq consult-narrow-key "<"))
+    (setq consult-narrow-key "<")
+    (leader-keys
+      "s" 'consult-line
+      "b" 'consult-buffer))
 
 #+end_src
 
@@ -304,11 +297,11 @@
   (use-package corfu
     :demand t
     :bind (:map corfu-map
-		("C-j" . corfu-next)
-		("C-k" . corfu-previous)
-		("TAB" . corfu-insert)
-		([tab] . corfu-insert)
-		("C-f" . corfu-insert))
+  	      ("C-j" . corfu-next)
+  	      ("C-k" . corfu-previous)
+  	      ("TAB" . corfu-insert)
+  	      ([tab] . corfu-insert)
+  	      ("C-f" . corfu-insert))
     :custom
     (corfu-cycle t)
     (corfu-auto t)
@@ -330,7 +323,10 @@
   (use-package magit
     :after general
     :demand t
-    :diminish magit-auto-revert-mode)
+    :diminish magit-auto-revert-mode
+    :config
+    (leader-keys
+      "gs" 'magit))
 
 #+end_src
 
@@ -346,13 +342,17 @@
 
   (use-package consult-project-extra
     :after general
-    :demand t)
+    :demand t
+    :config
+    (leader-keys
+      "pf" 'consult-project-extra-find
+      "po" 'consult-project-extra-find-other-window))
 
 #+end_src
 
 *** Bracket pair-matching
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (setq electric-pair-pairs '(
                               (?\{ . ?\})
                               (?\( . ?\))
@@ -393,7 +393,7 @@
 
 *** Web-Mode
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package web-mode
     :demand t
     :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.blade\\.php\\'")
@@ -405,7 +405,7 @@
 
 *** PHP
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package php-mode
     :demand t)
 
@@ -413,7 +413,7 @@
 
 *** Robot Framework (Python)
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package robot-mode
     :demand t)
 
@@ -421,7 +421,7 @@
 
 *** Prettier code formatting
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package prettier
     :demand t
     :hook ((web-mode . prettier-mode)))
@@ -452,7 +452,7 @@
 
 *** Treesitter language pack
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package tree-sitter-langs
     :demand t
     :after tree-sitter)
@@ -464,18 +464,22 @@
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package org
+    :ensure (:wait t)
     :demand t
     :mode (("\\.org$" . org-mode))
     :config
     (setq org-src-fontify-natively t)
     (setq org-src-tab-acts-natively t)
-    (setq org-agenda-files '("~/Org/agenda.org")))
+    (setq org-agenda-files '("~/Org/agenda.org"))
+    (leader-keys
+      "oal" 'org-agenda-list
+      "ots" 'org-time-stamp))
 
 #+end_src
 
 *** Org Roam
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package org-roam
     :demand t
     :init
@@ -483,7 +487,11 @@
     :custom
     (org-roam-directory "~/Org")
     :config
-    (org-roam-setup))
+    (org-roam-setup)
+    (leader-keys
+      "nl" 'org-roam-buffer-toggle
+      "nf" 'org-roam-node-find
+      "ni" 'org-roam-node-insert))
 
 #+end_src
 
@@ -519,8 +527,8 @@
     (add-hook 'org-mode-hook 'evil-org-mode)
     :config
     (add-hook 'evil-org-mode-hook
-	      (lambda ()
-		(evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
+  	    (lambda ()
+  	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 #+end_src
 
@@ -535,7 +543,7 @@
 
 *** Modeline
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (setq evil-mode-line-format '(before . mode-line-front-space))
   (setq-default mode-line-format
                 '("%e"
@@ -570,7 +578,7 @@
 *** Diminish
 #+begin_src emacs-lisp :tangle ./init.el
 
-    (use-package diminish
-      :demand t)
+  (use-package diminish
+    :demand t)
 
 #+end_src
