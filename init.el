@@ -58,7 +58,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(dired company-box company which-key solaire-mode smartparens rainbow-delimiters magit lsp-mode ivy-rich counsel-projectile)))
+   '(ef-themes dired company-box company which-key solaire-mode smartparens rainbow-delimiters magit lsp-mode ivy-rich counsel-projectile)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

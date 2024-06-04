@@ -3,10 +3,13 @@
 ;; Configure package doom-themes
 ;;; Code:
 
-(use-package modus-themes
+(use-package ef-themes
   :ensure t
+  :init
+  (setq ef-dark-palette-overrides
+	'((bg-main "#111111")))
   :config
-  (load-theme 'modus-vivendi :no-confirm))
+  (load-theme 'ef-dark :no-confirm))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
