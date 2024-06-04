@@ -52,7 +52,7 @@
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (tooltip-mode -1)
-  (set-fringe-mode 5)
+  (set-fringe-mode 0)
   (menu-bar-mode -1)
 
 #+end_src
@@ -66,7 +66,7 @@
 
 *** Handle column numbers for different modes
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (global-display-line-numbers-mode t)
 
   (dolist (mode '(org-mode-hook
@@ -433,21 +433,21 @@
 
 *** Org Roam Server
 #+begin_src emacs-lisp :tangle ./init.el
-  
+
   (use-package websocket
-      :after org-roam)
+    :after org-roam)
 
   (use-package org-roam-ui
-      :after org-roam ;; or :after org
-  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
-  ;;         a hookable mode anymore, you're advised to pick something yourself
-  ;;         if you don't care about startup time, use
-  ;;  :hook (after-init . org-roam-ui-mode)
-      :config
-      (setq org-roam-ui-sync-theme t
-            org-roam-ui-follow t
-            org-roam-ui-update-on-save t
-            org-roam-ui-open-on-start t))
+    :after org-roam ;; or :after org
+    ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+    ;;         a hookable mode anymore, you're advised to pick something yourself
+    ;;         if you don't care about startup time, use
+    ;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
 #+end_src
 
@@ -471,6 +471,39 @@
 #+end_src
 
 ** UI
+*** Coloured Brackets
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+#+end_src
+
+*** Modeline
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (setq-default mode-line-format
+                '("%e"
+                  mode-line-front-space
+                  mode-line-mule-info
+                  mode-line-client-mode
+                  mode-line-modified
+                  mode-line-remote
+                  mode-line-frame-indentifcation
+                  " "
+                  mode-line-buffer-identification
+                  "  "
+                  vc-mode
+                  " "
+                  mode-line-modes
+                  " "
+                  mode-line-misc-info
+                  mode-line-end-spaces))  
+
+  (setq evil-mode-line-format '(before . mode-line-front-space))
+
+#+end_src
+
 *** Theme
 #+begin_src emacs-lisp :tangle ./init.el
 
@@ -486,54 +519,6 @@
     :ensure t
     :config
     (load-theme 'moe-dark :no-confirm))
-
-#+end_src
-
-*** Coloured Brackets
-#+begin_src emacs-lisp :tangle ./init.el
-  
-  (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
-
-#+end_src
-
-*** Modeline
-#+begin_src emacs-lisp :tangle ./init.el
-  
-  (defun simple-mode-line-render (left right)
-    "Return a string of `window-width' length.
-  Containing LEFT, and RIGHT aligned respectively."
-    (let ((available-width
-           (- (window-total-width)
-              (+ (length (format-mode-line left))
-                 (length (format-mode-line right))))))
-      (append left
-              (list (format (format "%%%ds" available-width) ""))
-              right)))
-
-  (setq-default
-   mode-line-format
-   '((:eval
-      (simple-mode-line-render
-       ;; Left.
-       (quote ("%e"
-               mode-line-front-space
-               mode-line-mule-info
-               mode-line-client-mode
-               mode-line-modified
-               mode-line-remote
-               " "
-               mode-line-buffer-identification
-               evil-mode-line-tag
-               "%l:%c"
-               " %p"))
-       ;; Right.
-       (quote (" "
-               mode-line-frame-identification
-               vc-mode
-               " "
-               mode-line-modes
-               mode-line-misc-info))))))
 
 #+end_src
 

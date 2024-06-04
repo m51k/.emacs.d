@@ -26,7 +26,7 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (tooltip-mode -1)
-(set-fringe-mode 5)
+(set-fringe-mode 0)
 (menu-bar-mode -1)
 
 (set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
@@ -233,7 +233,7 @@
 (use-package org
   :mode (("\\.org$" . org-mode))
   :config
-  (setq org-ellipsis "â¤µ")
+  (setq org-ellipsis "⤵")
   (setq org-hide-leading-stars t)
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
@@ -254,19 +254,19 @@
   (org-roam-setup))
 
 (use-package websocket
-    :after org-roam)
+  :after org-roam)
 
 (use-package org-roam-ui
-    :after org-roam ;; or :after org
-;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
-;;         a hookable mode anymore, you're advised to pick something yourself
-;;         if you don't care about startup time, use
-;;  :hook (after-init . org-roam-ui-mode)
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
+  :after org-roam ;; or :after org
+  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+  ;;         a hookable mode anymore, you're advised to pick something yourself
+  ;;         if you don't care about startup time, use
+  ;;  :hook (after-init . org-roam-ui-mode)
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
 
 (use-package evil-org
   :commands evil-org-mode
@@ -282,6 +282,29 @@
   (leader-keys
     "ni" 'org-roam-node-insert))
 
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(setq-default mode-line-format
+              '("%e"
+                mode-line-front-space
+                mode-line-mule-info
+                mode-line-client-mode
+                mode-line-modified
+                mode-line-remote
+                mode-line-frame-indentifcation
+                " "
+                mode-line-buffer-identification
+                "  "
+                vc-mode
+                " "
+                mode-line-modes
+                " "
+                mode-line-misc-info
+                mode-line-end-spaces))  
+
+(setq evil-mode-line-format '(before . mode-line-front-space))
+
 ;; (use-package ef-themes
 ;;   :ensure t
 ;;   :init
@@ -294,44 +317,6 @@
   :ensure t
   :config
   (load-theme 'moe-dark :no-confirm))
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-(defun simple-mode-line-render (left right)
-  "Return a string of `window-width' length.
-Containing LEFT, and RIGHT aligned respectively."
-  (let ((available-width
-         (- (window-total-width)
-            (+ (length (format-mode-line left))
-               (length (format-mode-line right))))))
-    (append left
-            (list (format (format "%%%ds" available-width) ""))
-            right)))
-
-(setq-default
- mode-line-format
- '((:eval
-    (simple-mode-line-render
-     ;; Left.
-     (quote ("%e"
-             mode-line-front-space
-             mode-line-mule-info
-             mode-line-client-mode
-             mode-line-modified
-             mode-line-remote
-             " "
-             mode-line-buffer-identification
-             evil-mode-line-tag
-             "%l:%c"
-             " %p"))
-     ;; Right.
-     (quote (" "
-             mode-line-frame-identification
-             vc-mode
-             " "
-             mode-line-modes
-             mode-line-misc-info))))))
 
 (use-package diminish
   :diminish (abbrev-mode)
