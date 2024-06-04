@@ -14,17 +14,5 @@
   :ensure t
   :after tree-sitter)
 
-(tree-sitter-require 'tsx)
-
-;; TSX
-(define-derived-mode typescript-tsx-mode web-mode "TypeScript/TSX")
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
-(add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx))
-
-;; JSX
-(define-derived-mode javascript-jsx-mode web-mode "JavaScript/JSX")
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . javascript-jsx-mode))
-(add-to-list 'tree-sitter-major-mode-language-alist '(javascript-jsx-mode . jsx))
-
 (provide 'treesitter-module)
 ;;; treesitter-module.el ends here
