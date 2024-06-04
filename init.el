@@ -111,20 +111,21 @@
     "ec" 'flymake-start
     "es" 'consult-flymake))
 
-;; (use-package evil
-;;   :demand t
-;;   :config
-;;   (evil-mode 1)
-;;   (evil-set-initial-state 'eshell-mode 'emacs)
-;;   (evil-set-initial-state 'dired-mode 'emacs)
-;;   (evil-set-initial-state 'messages-buffer-mode 'normal)
-;;   (evil-set-initial-state 'dashboard-mode 'normal)
-;;   :delight evil-mode
-;;   :custom
-;;   (evil-want-keybinding nil)
-;;   (evil-want-integration t)
-;;   (evil-want-C-u-scroll t)
-;;   (evil-want-C-i-jump nil))
+(use-package evil
+  :demand t
+  :config
+  (evil-mode 1)
+  (evil-set-initial-state 'eshell-mode 'emacs)
+  (evil-set-initial-state 'dired-mode 'emacs)
+  (evil-set-initial-state 'magit-mode 'emacs)
+  (evil-set-initial-state 'text-mode 'emacs)
+  (evil-set-initial-state 'org-mode 'normal)
+  :delight evil-mode
+  :custom
+  (evil-want-keybinding nil)
+  (evil-want-integration t)
+  (evil-want-C-u-scroll t)
+  (evil-want-C-i-jump nil))
 
 (use-package which-key
   :init (which-key-mode)
@@ -326,7 +327,7 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;; (setq evil-mode-line-format '(after . mode-line-buffer-identification))
+(setq evil-mode-line-format '(after . mode-line-buffer-identification))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
