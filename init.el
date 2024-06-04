@@ -1,22 +1,67 @@
+(defvar elpaca-installer-version 0.7)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+			      :ref nil :depth 1
+			      :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+			      :build (:not elpaca--activate-package)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (< emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+	(if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+		 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+						 ,@(when-let ((depth (plist-get order :depth)))
+						     (list (format "--depth=%d" depth) "--no-single-branch"))
+						 ,(plist-get order :repo) ,repo))))
+		 ((zerop (call-process "git" nil buffer t "checkout"
+				       (or (plist-get order :ref) "--"))))
+		 (emacs (concat invocation-directory invocation-name))
+		 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+				       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+		 ((require 'elpaca))
+		 ((elpaca-generate-autoloads "elpaca" repo)))
+	    (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+	  (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (load "./elpaca-autoloads")))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
+
+;; Install use-package support
+(elpaca elpaca-use-package
+	;; Enable use-package :ensure support for Elpaca.
+	(elpaca-use-package-mode)
+	(setq use-package-always-ensure t))
+
 (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024))
 
-(require 'package)
+;; (require 'package)
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+;;                          ("org" . "https://orgmode.org/elpa/")
+;;                          ("elpa" . "https://elpa.gnu.org/packages/")))
 
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
+;; (package-initialize)
+;; (unless package-archive-contents
+;;   (package-refresh-contents))
 
-;; Initialize use-package for non-linux
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+;; ;; Initialize use-package for non-linux
+;; (unless (package-installed-p 'use-package)
+;;   (package-install 'use-package))
 
-(require 'use-package)
-(setq use-package-always-ensure t)
+;; (require 'use-package)
+;; (setq use-package-always-ensure t)
 
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
@@ -43,42 +88,51 @@
 (global-hl-line-mode)
 
 (use-package no-littering
-  :ensure t)
+  :demand t)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (use-package general
   :after evil
+  :ensure (:wait t)
+  :demand t
   :config
+  (general-auto-unbind-keys)
   (general-create-definer leader-keys
-                          :states '(normal visual emacs)
-                          :prefix "SPC"
-                          :global-prefix "C-SPC")
+			  :states '(normal visual emacs)
+			  :prefix "SPC"
+			  :global-prefix "C-SPC")
   (leader-keys
-    "tt" 'eshell
-    "fs" 'save-buffer
-    "kb" 'kill-buffer
-    "kk" 'kill-buffer-and-window
-    "qq" 'quit-window
-    "ff" 'find-file
-    "ws" 'split-window-horizontally
-    "wv" 'split-window-vertically
-    "wh" 'evil-window-left
-    "wj" 'evil-window-down
-    "wk" 'evil-window-up
-    "wl" 'evil-window-right
-    "cc" 'comment-line
-    "cr" 'comment-or-uncomment-region
-    "op" 'dired-jump
-    "s" 'consult-line
-    "b" 'consult-buffer
-    "oal" 'org-agenda-list
-    "nl" 'org-roam-buffer-toggle
-    "nf" 'org-roam-node-find))
+   "tt" 'eshell
+   "fs" 'save-buffer
+   "kb" 'kill-buffer
+   "kk" 'kill-buffer-and-window
+   "qq" 'quit-window
+   "ff" 'find-file
+   "ws" 'split-window-horizontally
+   "wv" 'split-window-vertically
+   "wh" 'evil-window-left
+   "wj" 'evil-window-down
+   "wk" 'evil-window-up
+   "wl" 'evil-window-right
+   "cc" 'comment-line
+   "cr" 'comment-or-uncomment-region
+   "op" 'dired-jump
+   "s" 'consult-line
+   "b" 'consult-buffer
+   "oal" 'org-agenda-list
+   "nl" 'org-roam-buffer-toggle
+   "nf" 'org-roam-node-find
+   "pf" 'consult-project-extra-find
+   "po" 'consult-project-extra-find-other-window
+   "gs" 'magit
+   "ots" 'org-time-stamp
+   "ni" 'org-roam-node-insert))
 
-(general-auto-unbind-keys)
+(elpaca-wait)
 
 (use-package evil
+  :demand t
   :config
   (evil-mode 1)
   :diminish evil-mode
@@ -104,50 +158,49 @@
   (setq which-key-idle-delay 1))
 
 (use-package vertico
-  :ensure t
+  :demand t
   :init
   (vertico-mode)
   :bind (:map vertico-map
-              ("C-j" . vertico-next)
-              ("C-k" . vertico-previous))
+	      ("C-j" . vertico-next)
+	      ("C-k" . vertico-previous))
   :config
   (setq vertico-cycle t)
   (setq vertico-resize nil))
 
-(use-package savehist
-  :init
-  (savehist-mode))
+(savehist-mode 1)
 
 (use-package marginalia
   :after vertico
-  :ensure t
+  :demand t
   :config
   (marginalia-mode 1))
 
 (use-package orderless
-  :ensure t
+  :demand t
   :config
   (setq completion-styles '(orderless basic)))
 
 (use-package consult
-  :ensure t
+  :demand t
   :config
   (setq consult-narrow-key "<"))
 
 (use-package embark
-  :ensure t
+  :demand t
   :bind (("C-." . embark-act)))
 
 (use-package embark-consult
-  :ensure t)
+  :demand t)
 
 (use-package corfu
+  :demand t
   :bind (:map corfu-map
-              ("C-j" . corfu-next)
-              ("C-k" . corfu-previous)
-              ("TAB" . corfu-insert)
-              ([tab] . corfu-insert)
-              ("C-f" . corfu-insert))
+	      ("C-j" . corfu-next)
+	      ("C-k" . corfu-previous)
+	      ("TAB" . corfu-insert)
+	      ([tab] . corfu-insert)
+	      ("C-f" . corfu-insert))
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -157,22 +210,19 @@
   :init
   (global-corfu-mode))
 
-(use-package magit
-  :ensure t
-  :diminish magit-auto-revert-mode
-  :general
-  (leader-keys
-    "gs" 'magit))
+(use-package transient
+  :demand t)
 
-(use-package project
-  :ensure t)
+(use-package magit
+  :after general
+  :demand t
+  :diminish magit-auto-revert-mode)
+
+(require 'project)
 
 (use-package consult-project-extra
-  :ensure t
-  :general
-  (leader-keys
-   "pf" 'consult-project-extra-find
-   "po" 'consult-project-extra-find-other-window))
+  :after general
+  :demand t)
 
 (setq electric-pair-pairs '(
                             (?\{ . ?\})
@@ -183,7 +233,7 @@
 (electric-pair-mode t)
 
 (use-package lsp-mode
-  :ensure t
+  :demand t
   :custom
   (lsp-completion-provider :none)
   (with-eval-after-load 'lsp-mode
@@ -205,54 +255,48 @@
   :commands lsp-deferred)
 
 (use-package web-mode
-  :ensure t
+  :demand t
   :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.blade\\.php\\'")
   :config
   (setq web-mode-enable-auto-pairing nil)
   (setq web-mode-enable-auto-closing t))
 
 (use-package php-mode
-  :ensure t)
+  :demand t)
 
 (use-package robot-mode
-  :ensure t)
+  :demand t)
 
 (use-package prettier
-  :ensure t
+  :demand t
   :hook ((web-mode . prettier-mode)))
 
 (use-package flycheck
-  :ensure t
+  :demand t
   :diminish flycheck-mode
   :init (global-flycheck-mode))
 
 (use-package tree-sitter
-  :ensure t
+  :demand t
   :diminish tree-sitter-mode
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 (use-package tree-sitter-langs
-  :ensure t
+  :demand t
   :after tree-sitter)
 
-(use-package treemacs-icons-dired
-  :hook (dired-mode . treemacs-icons-dired-enable-once)
-  :ensure t)
-
 (use-package org
+  :demand t
   :mode (("\\.org$" . org-mode))
   :config
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
-  (setq org-agenda-files '("~/Org/agenda.org"))
-  :general
-  (leader-keys
-    "ots" 'org-time-stamp))
+  (setq org-agenda-files '("~/Org/agenda.org")))
 
 (use-package org-roam
-  :ensure t
+  :demand t
   :init
   (setq org-roam-v2-ack t)
   :custom
@@ -276,18 +320,16 @@
         org-roam-ui-open-on-start t))
 
 (use-package evil-org
+  :after org
+  :demand t
   :commands evil-org-mode
   :diminish evil-org-mode
-  :after org
   :init
   (add-hook 'org-mode-hook 'evil-org-mode)
   :config
   (add-hook 'evil-org-mode-hook
-            (lambda ()
-              (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))))
-  :general
-  (leader-keys
-    "ni" 'org-roam-node-insert))
+	    (lambda ()
+	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -312,18 +354,9 @@
                 mode-line-end-spaces))
 
 (use-package moe-theme
-  :ensure t
+  :demand t
   :config
   (load-theme 'moe-dark :no-confirm))
 
 (use-package diminish
-  :ensure t)
-
-(use-package eldoc
-  :diminish eldoc-mode)
-
-(use-package autorevert
-  :diminish auto-revert-mode)
-
-(use-package emacs
-  :diminish abbrev-mode)
+  :demand t)
