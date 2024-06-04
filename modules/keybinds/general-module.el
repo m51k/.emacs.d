@@ -13,10 +13,7 @@
 			  :prefix "SPC"
 			  :global-prefix "C-SPC")
   (leader-keys
-    "tt"
-    (if (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
-        'vterm
-      'eshell)
+    "tt" 'eshell
     "fs" 'save-buffer
     "kb" 'kill-buffer
     "kk" 'kill-buffer-and-window
