@@ -106,9 +106,9 @@
   :config
   (general-auto-unbind-keys)
   (general-create-definer leader-keys
-    :states '(normal visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
+    ;; :states '(normal visual emacs)
+    :prefix "C-c")
+    ;; :global-prefix "C-SPC")
   (leader-keys
     "tt" 'eshell
     "fs" 'save-buffer
@@ -122,34 +122,32 @@
     "cr" 'comment-or-uncomment-region
     "op" 'dired-jump))
 
-(elpaca-wait)
+;; (use-package evil
+;;   :demand t
+;;   :config
+;;   (evil-mode 1)
+;;   (leader-keys
+;;     "wh" 'evil-window-left
+;;     "wj" 'evil-window-down
+;;     "wk" 'evil-window-up
+;;     "wl" 'evil-window-right)
+;;   (add-to-list 'evil-emacs-state-modes 'nov-mode)
+;;   (add-to-list 'evil-insert-state-modes 'eshell)
+;;   :delight evil-mode
+;;   :custom
+;;   (evil-want-keybinding nil)
+;;   (evil-want-integration t)
+;;   (evil-want-C-u-scroll t)
+;;   (evil-want-C-i-jump nil)
+;;   (evil-set-initial-state 'messages-buffer-mode 'normal)
+;;   (evil-set-initial-state 'dashboard-mode 'normal))
 
-(use-package evil
-  :demand t
-  :config
-  (evil-mode 1)
-  (leader-keys
-    "wh" 'evil-window-left
-    "wj" 'evil-window-down
-    "wk" 'evil-window-up
-    "wl" 'evil-window-right)
-  (add-to-list 'evil-emacs-state-modes 'nov-mode)
-  (add-to-list 'evil-insert-state-modes 'eshell)
-  :delight evil-mode
-  :custom
-  (evil-want-keybinding nil)
-  (evil-want-integration t)
-  (evil-want-C-u-scroll t)
-  (evil-want-C-i-jump nil)
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
-
-(use-package evil-collection
-  :after evil
-  :delight evil-collection-unimpaired-mode
-  :ensure t
-  :config
-  (evil-collection-init))
+;; (use-package evil-collection
+;;   :after evil
+;;   :delight evil-collection-unimpaired-mode
+;;   :ensure t
+;;   :config
+;;   (evil-collection-init))
 
 (use-package which-key
   :init (which-key-mode)
@@ -161,9 +159,6 @@
   :demand t
   :init
   (vertico-mode)
-  :bind (:map vertico-map
-	      ("C-j" . vertico-next)
-	      ("C-k" . vertico-previous))
   :config
   (setq vertico-cycle t)
   (setq vertico-resize nil))
@@ -199,11 +194,8 @@
 (use-package corfu
   :demand t
   :bind (:map corfu-map
-	      ("C-j" . corfu-next)
-	      ("C-k" . corfu-previous)
 	      ("TAB" . corfu-insert)
-	      ([tab] . corfu-insert)
-	      ("C-f" . corfu-insert))
+	      ([tab] . corfu-insert))
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -338,22 +330,22 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
-(use-package evil-org
-  :after org
-  :demand t
-  :commands evil-org-mode
-  :delight evil-org-mode
-  :init
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  :config
-  (add-hook 'evil-org-mode-hook
-	    (lambda ()
-	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
+;; (use-package evil-org
+;;   :after org
+;;   :demand t
+;;   :commands evil-org-mode
+;;   :delight evil-org-mode
+;;   :init
+;;   (add-hook 'org-mode-hook 'evil-org-mode)
+;;   :config
+;;   (add-hook 'evil-org-mode-hook
+;; 	    (lambda ()
+;; 	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(setq evil-mode-line-format '(before . mode-line-front-space))
+;; (setq evil-mode-line-format '(before . mode-line-front-space))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -376,9 +368,3 @@
   :demand t
   :config
   (load-theme 'moe-dark :no-confirm))
-
-(use-package nov
-  :ensure (nov :depth nil)
-  :mode ("\\.epub\\'" . nov-mode)
-  :commands
-  (nov-mode))
