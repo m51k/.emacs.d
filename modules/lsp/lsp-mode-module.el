@@ -20,16 +20,22 @@
    (c-mode . lsp-deferred)
    (c++-mode . lsp-deferred)
    (php-mode . lsp-deferred)
+   (robot-mode . lsp-mode)
    (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp-deferred
   :custom
   gc-cons-threshold (* 100 1024 1024)
   read-process-output-max (* 1024 1024)
-  create-lockfiles nil)
+  create-lockfiles nil
+  (with-eval-after-load 'lsp-mode
+    (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
+    (lsp-register-client (make-lsp-client
+			  :new-connection (lsp-stdio-connection "robotframework-lsp")
+			  :activation-fn (lsp-activate-on "robot")
+			  :server-id 'robotframework-lsp))))
 
 (use-package robot-mode
-  :ensure t
-  :mode ("//.robot//'"))
+  :ensure t)
 
 (use-package flycheck
   :ensure t
