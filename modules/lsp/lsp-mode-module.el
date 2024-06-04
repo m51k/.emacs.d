@@ -23,6 +23,10 @@
   read-process-output-max (* 1024 1024)
   create-lockfiles nil)
 
+(use-package robot-mode
+  :ensure t
+  :mode ("//.robot//'"))
+
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
