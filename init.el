@@ -104,37 +104,25 @@
   :demand t
   :config
   (general-auto-unbind-keys)
-  (general-create-definer leader-keys
-    ;; :states '(normal visual emacs)
+  (general-create-definer global-leader
     :prefix "C-c")
-    ;; :global-prefix "C-SPC")
-  (leader-keys
-    "tt" 'eshell
-    "fs" 'save-buffer
-    "kb" 'kill-buffer
-    "kk" 'kill-buffer-and-window
-    "qq" 'quit-window
-    "ff" 'find-file
-    "ws" 'split-window-horizontally
-    "wv" 'split-window-vertically
-    "cc" 'comment-line
-    "cr" 'comment-or-uncomment-region
-    "op" 'dired-jump))
+  (global-leader
+	"t" 'eshell))
 
-(use-package evil
-  :demand t
-  :config
-  (evil-mode 1)
-  (evil-set-initial-state 'eshell-mode 'emacs)
-  (evil-set-initial-state 'dired-mode 'emacs)
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal)
-  :delight evil-mode
-  :custom
-  (evil-want-keybinding nil)
-  (evil-want-integration t)
-  (evil-want-C-u-scroll t)
-  (evil-want-C-i-jump nil))
+;; (use-package evil
+;;   :demand t
+;;   :config
+;;   (evil-mode 1)
+;;   (evil-set-initial-state 'eshell-mode 'emacs)
+;;   (evil-set-initial-state 'dired-mode 'emacs)
+;;   (evil-set-initial-state 'messages-buffer-mode 'normal)
+;;   (evil-set-initial-state 'dashboard-mode 'normal)
+;;   :delight evil-mode
+;;   :custom
+;;   (evil-want-keybinding nil)
+;;   (evil-want-integration t)
+;;   (evil-want-C-u-scroll t)
+;;   (evil-want-C-i-jump nil))
 
 (use-package which-key
   :init (which-key-mode)
@@ -167,9 +155,10 @@
   :demand t
   :config
   (setq consult-narrow-key "<")
-  (leader-keys
-    "s" 'consult-line
-    "b" 'consult-buffer))
+  (general-define-key
+   "C-s" 'consult-line)
+  (global-leader
+   "b" 'consult-buffer))
 
 (use-package embark
   :demand t
@@ -199,7 +188,7 @@
   :after general
   :demand t
   :config
-  (leader-keys
+  (global-leader
     "gs" 'magit))
 
 (use-package project
@@ -209,7 +198,7 @@
   :after general
   :demand t
   :config
-  (leader-keys
+  (global-leader
     "pf" 'consult-project-extra-find
     "po" 'consult-project-extra-find-other-window))
 
@@ -262,7 +251,20 @@
 
 (use-package flycheck
   :demand t
-  :init (global-flycheck-mode))
+  :init (global-flycheck-mode)
+  :config
+  (defun my-promote-flycheck (&optional _file)
+    "Give `flycheck-mode' priority position in `minor-mode-alist'.
+
+Called via `after-load-functions', as well as `after-init-hook'."
+    (unless (eq (caar minor-mode-alist) 'flycheck-mode)
+      (let ((found (assq 'flycheck-mode minor-mode-alist)))
+	(when found
+          (assq-delete-all 'flycheck-mode minor-mode-alist)
+          (push found minor-mode-alist)))))
+
+  (add-hook 'after-load-functions 'my-promote-flycheck)
+  (add-hook 'after-init-hook 'my-promote-flycheck))
 
 (use-package tree-sitter
   :demand t
@@ -283,9 +285,8 @@
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
   (setq org-agenda-files '("~/Org/agenda.org"))
-  (leader-keys
-    "oal" 'org-agenda-list
-    "ots" 'org-time-stamp))
+  (global-leader
+    "a" 'org-agenda))
 
 (use-package org-roam
   :ensure (:depth 1)
@@ -296,7 +297,7 @@
   (org-roam-directory "~/Org")
   :config
   (org-roam-setup)
-  (leader-keys
+  (global-leader
     "nl" 'org-roam-buffer-toggle
     "nf" 'org-roam-node-find
     "ni" 'org-roam-node-insert))
@@ -316,22 +317,22 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
-(use-package evil-org
-  :after org
-  :demand t
-  :commands evil-org-mode
-  :delight evil-org-mode
-  :init
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  :config
-  (add-hook 'evil-org-mode-hook
-	    (lambda ()
-	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
+;; (use-package evil-org
+;;   :after org
+;;   :demand t
+;;   :commands evil-org-mode
+;;   :delight evil-org-mode
+;;   :init
+;;   (add-hook 'org-mode-hook 'evil-org-mode)
+;;   :config
+;;   (add-hook 'evil-org-mode-hook
+;; 	    (lambda ()
+;; 	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(setq evil-mode-line-format '(after . mode-line-buffer-identification))
+;; (setq evil-mode-line-format '(after . mode-line-buffer-identification))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -342,10 +343,12 @@
                 mode-line-frame-indentifcation
                 " "
                 mode-line-buffer-identification
-                " "
+		" "
                 vc-mode
                 " "
                 mode-line-modes
+		"%l:%c"
+		" %p"
                 " "
                 mode-line-misc-info
                 mode-line-end-spaces))
