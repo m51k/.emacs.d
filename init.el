@@ -223,13 +223,20 @@
           '(orderless)))
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion)
-  ((php-mode web-mode) . lsp-mode)
+  ((php-mode blade-mode robot-mode) . lsp-mode)
   :config
+  ;; register languages
   (add-to-list 'lsp-language-id-configuration '((php-mode blade-mode) . "php"))
+  (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
+  ;; configure clients
   (lsp-register-client (make-lsp-client
-    			:new-connection (lsp-stdio-connection "emacs-lsp-booster -q -- intelephense")
+    			:new-connection (lsp-stdio-connection "emacs-lsp-booster -q -- intelephense --stdio")
     			:activation-fn (lsp-activate-on "php")
-    			:server-id 'iph)))
+    			:server-id 'iph))
+  (lsp-register-client (make-lsp-client
+			:new-connection (lsp-stdio-connection "robotframework_ls")
+			:activation-fn (lsp-activate-on "robot")
+			:server-id 'robotframework-lsp)))
 
 (use-package web-mode
   :demand t
