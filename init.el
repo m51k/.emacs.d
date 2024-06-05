@@ -113,19 +113,20 @@
 
 (use-package evil
   :demand t
+  :init
+  (setq evil-want-keybinding nil)
+  (setq evil-want-integration t)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
   :config
   (evil-mode 1)
-  (evil-set-initial-state 'eshell-mode 'emacs)
-  (evil-set-initial-state 'dired-mode 'emacs)
-  (evil-set-initial-state 'magit-mode 'emacs)
-  (evil-set-initial-state 'text-mode 'emacs) ;; this is for the magit commit message thing
+  (dolist (mode '(eshell-mode
+		  dired-mode
+		  magit-mode
+		  text-mode))
+    (add-to-list 'evil-emacs-state-modes mode))
   (evil-set-initial-state 'org-mode 'normal)
-  :delight evil-mode
-  :custom
-  (evil-want-keybinding nil)
-  (evil-want-integration t)
-  (evil-want-C-u-scroll t)
-  (evil-want-C-i-jump nil))
+  :delight evil-mode)
 
 (use-package which-key
   :init (which-key-mode)
@@ -177,12 +178,14 @@
 	      ([tab] . corfu-insert)
 	      ("RET" . nil))
   :custom
+  (completion-category-overrides '((eglot (styles orderless))))
+  (completion-category-defaults nil)
   (corfu-cycle t)
   (corfu-auto t)
   (corfu-preview-current nil)
   (corfu-quit-at-boundary t)
   (corfu-quit-no-match t)
-  :init
+  :config
   (global-corfu-mode))
 
 (use-package transient
@@ -214,30 +217,50 @@
                             ))
 (electric-pair-mode t)
 
-(use-package lsp-mode
+;; (use-package lsp-mode
+;;   :demand t
+;;   :custom
+;;   (lsp-completion-provider :none) 
+;;   :init
+;;   ;; use orderless
+;;   (defun my/lsp-mode-setup-completion ()
+;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+;;           '(orderless)))
+;;   :hook
+;;   (lsp-completion-mode . my/lsp-mode-setup-completion)
+;;   ((php-mode blade-mode robot-mode) . lsp-mode)
+;;   :config
+;;   ;; register languages
+;;   (add-to-list 'lsp-language-id-configuration '((php-mode blade-mode) . "php"))
+;;   (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
+;;   ;; configure clients
+;;   (lsp-register-client (make-lsp-client
+;;     			:new-connection (lsp-stdio-connection "emacs-lsp-booster -q -- intelephense --stdio")
+;;     			:activation-fn (lsp-activate-on "php")
+;;     			:server-id 'iph))
+;;   (lsp-register-client (make-lsp-client
+;; 			:new-connection (lsp-stdio-connection "robotframework_ls")
+;; 			:activation-fn (lsp-activate-on "robot")
+;; 			:server-id 'robotframework-lsp)))
+
+(use-package eglot
+  :ensure nil
   :demand t
-  :custom
-  (lsp-completion-provider :none) 
-  :init
-  (defun my/lsp-mode-setup-completion ()
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless)))
   :hook
-  (lsp-completion-mode . my/lsp-mode-setup-completion)
-  ((php-mode blade-mode robot-mode) . lsp-mode)
+  ((php-mode blade-mode robot-mode) . eglot-ensure)
   :config
-  ;; register languages
-  (add-to-list 'lsp-language-id-configuration '((php-mode blade-mode) . "php"))
-  (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
-  ;; configure clients
-  (lsp-register-client (make-lsp-client
-    			:new-connection (lsp-stdio-connection "emacs-lsp-booster -q -- intelephense --stdio")
-    			:activation-fn (lsp-activate-on "php")
-    			:server-id 'iph))
-  (lsp-register-client (make-lsp-client
-			:new-connection (lsp-stdio-connection "robotframework_ls")
-			:activation-fn (lsp-activate-on "robot")
-			:server-id 'robotframework-lsp)))
+  (add-to-list 'eglot-server-programs
+	       '(php-mode . ("intelephense" "--stdio")))
+  (add-to-list 'eglot-server-programs
+	       '((blade-mode :language-id "php") . ("intelephense" "--stdio")))
+  (add-to-list 'eglot-server-programs
+	       '(robot-mode . ("robotframework_ls"))))
+
+(use-package eglot-booster
+  :ensure (:host github :repo "jdtsmith/eglot-booster")
+  :after eglot
+  :demand t
+  :config (eglot-booster-mode))
 
 (use-package web-mode
   :demand t
@@ -312,22 +335,23 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
-;; (use-package evil-org
-;;   :after org
-;;   :demand t
-;;   :commands evil-org-mode
-;;   :delight evil-org-mode
-;;   :init
-;;   (add-hook 'org-mode-hook 'evil-org-mode)
-;;   :config
-;;   (add-hook 'evil-org-mode-hook
-;; 	    (lambda ()
-;; 	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
+(use-package evil-org
+  :after org
+  :demand t
+  :commands evil-org-mode
+  :delight evil-org-mode
+  :init
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  :config
+  (add-hook 'evil-org-mode-hook
+	    (lambda ()
+	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(setq evil-mode-line-format '(after . mode-line-buffer-identification))
+(setq evil-mode-line-format '(after . mode-line-position))
+(setq mode-line-position (list "%l:%c %p"))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -342,8 +366,7 @@
                 vc-mode
                 " "
                 mode-line-modes
-		"%l:%c"
-		" %p"
+		mode-line-position
                 " "
                 mode-line-misc-info
                 mode-line-end-spaces))
