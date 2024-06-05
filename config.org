@@ -3,7 +3,7 @@
 * Basics
 ** Package Manager
 [[https://github.com/progfolio/elpacahttps://github.com/progfolio/elpaca][Elpaca]] is a package manager capable of installing packages asynchronously, it's much faster than package.el.
-*!! Make sure to enable symlink perms on windows !!*
+\n *!! Make sure to enable symlink perms on windows !!*
 #+begin_src emacs-lisp :tangle ./init.el
 
   (defvar elpaca-installer-version 0.7)
