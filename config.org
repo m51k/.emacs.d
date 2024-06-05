@@ -1,9 +1,8 @@
 #+title: Emacs Literate Config
-#+options: \n:t
 * Basics
 ** Package Manager
-[[https://github.com/progfolio/elpacahttps://github.com/progfolio/elpaca][Elpaca]] is a package manager capable of installing packages asynchronously, it's much faster than package.el.
-\n *!! Make sure to enable symlink perms on windows !!*
+[[https://github.com/progfolio/elpacahttps://github.com/progfolio/elpaca][Elpaca]] is a package manager capable of installing packages asynchronously, it's much faster than package.el. \\
+*!! Make sure to enable symlink perms on windows !!*
 #+begin_src emacs-lisp :tangle ./init.el
 
   (defvar elpaca-installer-version 0.7)
@@ -399,9 +398,7 @@ Git interface.
       ((php-mode blade-mode robot-mode) . eglot-ensure)
       :config
       (add-to-list 'eglot-server-programs
-    	       '(php-mode . ("intelephense" "--stdio")))
-      (add-to-list 'eglot-server-programs
-    	       '((blade-mode :language-id "php") . ("intelephense" "--stdio")))
+    	       '(((php-mode) (blade-mode :language-id "php")) . ("intelephense" "--stdio")))
       (add-to-list 'eglot-server-programs
     	       '(robot-mode . ("robotframework_ls"))))
 

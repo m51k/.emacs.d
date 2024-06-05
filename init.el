@@ -250,9 +250,7 @@
   ((php-mode blade-mode robot-mode) . eglot-ensure)
   :config
   (add-to-list 'eglot-server-programs
-	       '(php-mode . ("intelephense" "--stdio")))
-  (add-to-list 'eglot-server-programs
-	       '((blade-mode :language-id "php") . ("intelephense" "--stdio")))
+	       '(((php-mode) (blade-mode :language-id "php")) . ("intelephense" "--stdio")))
   (add-to-list 'eglot-server-programs
 	       '(robot-mode . ("robotframework_ls"))))
 
