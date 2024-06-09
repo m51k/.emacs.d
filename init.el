@@ -107,26 +107,27 @@
   (general-create-definer global-leader
     :prefix "C-c")
   (global-leader
-    "t" 'eshell
+    "t"  'eshell
     "ec" 'flymake-start
+    "s"  'consult-line
     "es" 'consult-flymake))
 
-(use-package evil
-  :demand t
-  :init
-  (setq evil-want-keybinding nil)
-  (setq evil-want-integration t)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (dolist (mode '(eshell-mode
-		  dired-mode
-		  magit-mode
-		  text-mode))
-    (add-to-list 'evil-emacs-state-modes mode))
-  (evil-set-initial-state 'org-mode 'normal)
-  :delight evil-mode)
+;; (use-package evil
+;;   :demand t
+;;   :init
+;;   (setq evil-want-keybinding nil)
+;;   (setq evil-want-integration t)
+;;   (setq evil-want-C-u-scroll t)
+;;   (setq evil-want-C-i-jump nil)
+;;   :config
+;;   (evil-mode 1)
+;;   (dolist (mode '(eshell-mode
+;; 		  dired-mode
+;; 		  magit-mode
+;; 		  text-mode))
+;;     (add-to-list 'evil-emacs-state-modes mode))
+;;   (evil-set-initial-state 'org-mode 'normal)
+;;   :delight evil-mode)
 
 (use-package which-key
   :init (which-key-mode)
@@ -159,8 +160,6 @@
   :demand t
   :config
   (setq consult-narrow-key "<")
-  (general-define-key
-   "C-s" 'consult-line)
   (global-leader
    "b" 'consult-buffer))
 
@@ -333,17 +332,17 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
-(use-package evil-org
-  :after org
-  :demand t
-  :commands evil-org-mode
-  :delight evil-org-mode
-  :init
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  :config
-  (add-hook 'evil-org-mode-hook
-	    (lambda ()
-	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
+;; (use-package evil-org
+;;   :after org
+;;   :demand t
+;;   :commands evil-org-mode
+;;   :delight evil-org-mode
+;;   :init
+;;   (add-hook 'org-mode-hook 'evil-org-mode)
+;;   :config
+;;   (add-hook 'evil-org-mode-hook
+;; 	    (lambda ()
+;; 	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
