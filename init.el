@@ -160,6 +160,7 @@
   :demand t
   :config
   (setq consult-narrow-key "<")
+  :general
   (global-leader
    "b" 'consult-buffer))
 
@@ -193,7 +194,7 @@
 (use-package magit
   :after general
   :demand t
-  :config
+  :general
   (global-leader
     "gs" 'magit))
 
@@ -203,7 +204,7 @@
 (use-package consult-project-extra
   :after general
   :demand t
-  :config
+  :general
   (global-leader
     "pf" 'consult-project-extra-find
     "po" 'consult-project-extra-find-other-window))
@@ -259,6 +260,14 @@
   :demand t
   :config (eglot-booster-mode))
 
+(use-package eldoc-box
+  :demand t
+  :config
+  (setq eldoc-echo-area-use-multiline-p nil)
+  :general
+  (general-define-key
+   "C-h ." 'eldoc-box-help-at-point))
+
 (use-package web-mode
   :demand t
   :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'")
@@ -300,6 +309,7 @@
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
   (setq org-agenda-files '("~/Org/agenda.org"))
+  :general
   (global-leader
     "a" 'org-agenda))
 
@@ -312,6 +322,7 @@
   (org-roam-directory "~/Org")
   :config
   (org-roam-setup)
+  :general
   (global-leader
     "nl" 'org-roam-buffer-toggle
     "nf" 'org-roam-node-find

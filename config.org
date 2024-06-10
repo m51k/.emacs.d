@@ -270,6 +270,7 @@ In case I forget some binds
     :demand t
     :config
     (setq consult-narrow-key "<")
+    :general
     (global-leader
      "b" 'consult-buffer))
 
@@ -320,7 +321,7 @@ Git interface.
   (use-package magit
     :after general
     :demand t
-    :config
+    :general
     (global-leader
       "gs" 'magit))
 
@@ -340,7 +341,7 @@ Git interface.
   (use-package consult-project-extra
     :after general
     :demand t
-    :config
+    :general
     (global-leader
       "pf" 'consult-project-extra-find
       "po" 'consult-project-extra-find-other-window))
@@ -364,51 +365,62 @@ Git interface.
 ** LSP
 #+begin_src emacs-lisp :tangle ./init.el
 
-    ;; (use-package lsp-mode
-    ;;   :demand t
-    ;;   :custom
-    ;;   (lsp-completion-provider :none) 
-    ;;   :init
-    ;;   ;; use orderless
-    ;;   (defun my/lsp-mode-setup-completion ()
-    ;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-    ;;           '(orderless)))
-    ;;   :hook
-    ;;   (lsp-completion-mode . my/lsp-mode-setup-completion)
-    ;;   ((php-mode blade-mode robot-mode) . lsp-mode)
-    ;;   :config
-    ;;   ;; register languages
-    ;;   (add-to-list 'lsp-language-id-configuration '((php-mode blade-mode) . "php"))
-    ;;   (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
-    ;;   ;; configure clients
-    ;;   (lsp-register-client (make-lsp-client
-    ;;     			:new-connection (lsp-stdio-connection "emacs-lsp-booster -q -- intelephense --stdio")
-    ;;     			:activation-fn (lsp-activate-on "php")
-    ;;     			:server-id 'iph))
-    ;;   (lsp-register-client (make-lsp-client
-    ;; 			:new-connection (lsp-stdio-connection "robotframework_ls")
-    ;; 			:activation-fn (lsp-activate-on "robot")
-    ;; 			:server-id 'robotframework-lsp)))
+  ;; (use-package lsp-mode
+  ;;   :demand t
+  ;;   :custom
+  ;;   (lsp-completion-provider :none) 
+  ;;   :init
+  ;;   ;; use orderless
+  ;;   (defun my/lsp-mode-setup-completion ()
+  ;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+  ;;           '(orderless)))
+  ;;   :hook
+  ;;   (lsp-completion-mode . my/lsp-mode-setup-completion)
+  ;;   ((php-mode blade-mode robot-mode) . lsp-mode)
+  ;;   :config
+  ;;   ;; register languages
+  ;;   (add-to-list 'lsp-language-id-configuration '((php-mode blade-mode) . "php"))
+  ;;   (add-to-list 'lsp-language-id-configuration '(robot-mode . "robot"))
+  ;;   ;; configure clients
+  ;;   (lsp-register-client (make-lsp-client
+  ;;     			:new-connection (lsp-stdio-connection "emacs-lsp-booster -q -- intelephense --stdio")
+  ;;     			:activation-fn (lsp-activate-on "php")
+  ;;     			:server-id 'iph))
+  ;;   (lsp-register-client (make-lsp-client
+  ;; 			:new-connection (lsp-stdio-connection "robotframework_ls")
+  ;; 			:activation-fn (lsp-activate-on "robot")
+  ;; 			:server-id 'robotframework-lsp)))
 
-    (use-package eglot
-      :ensure nil
-      :demand t
-      :hook
-      ((php-mode blade-mode robot-mode) . eglot-ensure)
-      :config
-      (add-to-list 'eglot-server-programs
-    	       '(((php-mode) (blade-mode :language-id "php")) . ("intelephense" "--stdio")))
-      (add-to-list 'eglot-server-programs
-    	       '(robot-mode . ("robotframework_ls"))))
+  (use-package eglot
+    :ensure nil
+    :demand t
+    :hook
+    ((php-mode blade-mode robot-mode) . eglot-ensure)
+    :config
+    (add-to-list 'eglot-server-programs
+  	       '(((php-mode) (blade-mode :language-id "php")) . ("intelephense" "--stdio")))
+    (add-to-list 'eglot-server-programs
+  	       '(robot-mode . ("robotframework_ls"))))
 
-    (use-package eglot-booster
-      :ensure (:host github :repo "jdtsmith/eglot-booster")
-      :after eglot
-      :demand t
-      :config (eglot-booster-mode))
+  (use-package eglot-booster
+    :ensure (:host github :repo "jdtsmith/eglot-booster")
+    :after eglot
+    :demand t
+    :config (eglot-booster-mode))
 
 #+end_src
 
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package eldoc-box
+    :demand t
+    :config
+    (setq eldoc-echo-area-use-multiline-p nil)
+    :general
+    (general-define-key
+     "C-h ." 'eldoc-box-help-at-point))
+
+#+end_src
 ** Web-Mode
 #+begin_src emacs-lisp :tangle ./init.el
 
@@ -485,6 +497,7 @@ Syntax highlighting and indentation.
     (setq org-src-fontify-natively t)
     (setq org-src-tab-acts-natively t)
     (setq org-agenda-files '("~/Org/agenda.org"))
+    :general
     (global-leader
       "a" 'org-agenda))
 
@@ -502,6 +515,7 @@ Syntax highlighting and indentation.
     (org-roam-directory "~/Org")
     :config
     (org-roam-setup)
+    :general
     (global-leader
       "nl" 'org-roam-buffer-toggle
       "nf" 'org-roam-node-find
