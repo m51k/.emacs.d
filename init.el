@@ -287,7 +287,7 @@
 
 (use-package prettier
   :demand t
-  :hook ((web-mode . prettier-mode)))
+  :hook (web-mode . prettier-mode))
 
 (use-package tree-sitter
   :demand t
@@ -333,7 +333,7 @@
 
 (use-package org-roam-ui
   :after org-roam
-  :hook org-roam-mode . org-roam-ui-mode
+  :hook (org-roam-mode . org-roam-ui-mode)
   :config
   (setq org-roam-ui-sync-theme t
         org-roam-ui-follow t

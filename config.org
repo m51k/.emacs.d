@@ -192,7 +192,8 @@ Specify Keybindings under this or per package.
 #+end_src
 
 ** Evil mode
-Vim emulation, it's only used here for text/code editing, its default binds for anything else.
++Vim emulation, it's only used here for text/code editing, its default binds for anything else.+
+Commented for now because I got used to default binds somehow.
 #+begin_src emacs-lisp :tangle ./init.el
 
   ;; (use-package evil
@@ -215,7 +216,7 @@ Vim emulation, it's only used here for text/code editing, its default binds for 
 #+end_src
 
 ** Which key
-In case I forget some binds
+In case I forget some binds.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package which-key
@@ -363,6 +364,7 @@ Git interface.
 
 * Programming
 ** LSP
+Eglot is really simple to configure, but I left my old lsp-mode config here in case I need to switch, since the latter has more features (that I dont use at the moment).
 #+begin_src emacs-lisp :tangle ./init.el
 
   ;; (use-package lsp-mode
@@ -410,6 +412,8 @@ Git interface.
 
 #+end_src
 
+** Eldoc-box
+Having a separate buffer open for this is kinda annoying, so I use eldoc box to quickly check.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package eldoc-box
@@ -421,6 +425,7 @@ Git interface.
      "C-h ." 'eldoc-box-help-at-point))
 
 #+end_src
+
 ** Web-Mode
 #+begin_src emacs-lisp :tangle ./init.el
 
@@ -458,7 +463,7 @@ Git interface.
 
   (use-package prettier
     :demand t
-    :hook ((web-mode . prettier-mode)))
+    :hook (web-mode . prettier-mode))
 
 #+end_src
 
@@ -485,7 +490,7 @@ Syntax highlighting and indentation.
 #+end_src
 
 * Notes & Documentation
-** Org Mode 
+** Org Mode
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package org
@@ -532,7 +537,7 @@ Who needs obsidian?
 
   (use-package org-roam-ui
     :after org-roam
-    :hook org-roam-mode . org-roam-ui-mode
+    :hook (org-roam-mode . org-roam-ui-mode)
     :config
     (setq org-roam-ui-sync-theme t
           org-roam-ui-follow t
