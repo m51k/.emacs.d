@@ -358,8 +358,7 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(setq evil-mode-line-format '(after . mode-line-position))
-(setq mode-line-position (list "%l:%c %p"))
+(setq mode-line-position (list "(%l:%C) %p"))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -370,12 +369,12 @@
                 mode-line-frame-indentifcation
                 " "
                 mode-line-buffer-identification
-		" "
-                vc-mode
-                " "
-                mode-line-modes
+		"  "
 		mode-line-position
-                " "
+                "  "
+                mode-line-modes
+                vc-mode
+		" "
                 mode-line-misc-info
                 mode-line-end-spaces))
 
