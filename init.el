@@ -63,6 +63,7 @@
 (global-display-line-numbers-mode t)
 
 (dolist (mode '(org-mode-hook
+		eat-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
@@ -107,7 +108,7 @@
   (general-create-definer global-leader
     :prefix "C-c")
   (global-leader
-    "t"  'eshell
+    "t"  'eat
     "ec" 'flymake-start
     "s"  'consult-line
     "es" 'consult-flymake))
@@ -226,6 +227,9 @@
                             (?\" . ?\")
                             ))
 (electric-pair-mode t)
+
+(use-package eat
+  :demand t)
 
 ;; (use-package lsp-mode
 ;;   :demand t

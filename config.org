@@ -101,6 +101,7 @@ The font used here is [[https://github.com/protesilaos/iosevka-comfy][Iosevka Co
   (global-display-line-numbers-mode t)
 
   (dolist (mode '(org-mode-hook
+  		eat-mode-hook
                   eshell-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
@@ -184,7 +185,7 @@ Specify Keybindings under this or per package.
     (general-create-definer global-leader
       :prefix "C-c")
     (global-leader
-      "t"  'eshell
+      "t"  'eat
       "ec" 'flymake-start
       "s"  'consult-line
       "es" 'consult-flymake))
@@ -378,6 +379,14 @@ Git interface.
 #+end_src
 
 * Programming
+** EAT
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package eat
+    :demand t)
+    
+#+end_src
+
 ** LSP
 Eglot is really simple to configure, but I left my old lsp-mode config here in case I need to switch, since the latter has more features (that I dont use at the moment).
 #+begin_src emacs-lisp :tangle ./init.el
