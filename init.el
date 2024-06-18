@@ -188,6 +188,16 @@
   :config
   (global-corfu-mode))
 
+(use-package all-the-icons-dired
+  :demand t
+  :hook
+  (dired-mode . all-the-icons-dired-mode)
+  :config
+  (setq all-the-icons-dired-monochrome nil))
+
+(use-package all-the-icons
+  :demand t)
+
 (use-package transient
   :demand t)
 

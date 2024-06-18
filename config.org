@@ -312,6 +312,21 @@ In case I forget some binds.
 #+end_src
 
 * Project management
+** Dired
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package all-the-icons-dired
+    :demand t
+    :hook
+    (dired-mode . all-the-icons-dired-mode)
+    :config
+    (setq all-the-icons-dired-monochrome nil))
+
+  (use-package all-the-icons
+    :demand t)
+
+#+end_src
+
 ** Magit
 Git interface.
 #+begin_src emacs-lisp :tangle ./init.el
