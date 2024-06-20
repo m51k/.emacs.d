@@ -58,7 +58,7 @@
 (set-fringe-mode 0)
 (menu-bar-mode -1)
 
-(set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
+(set-face-attribute 'default nil :font "Iosevka" :height 100)
 
 (global-display-line-numbers-mode t)
 

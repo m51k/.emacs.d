@@ -88,10 +88,9 @@
 #+end_src
 
 ** Font configuration
-The font used here is [[https://github.com/protesilaos/iosevka-comfy][Iosevka Comfy]], easy on the eyes.
 #+begin_src emacs-lisp :tangle ./init.el
 
-  (set-face-attribute 'default nil :font "Iosevka Comfy" :height 100)
+  (set-face-attribute 'default nil :font "Iosevka" :height 100)
 
 #+end_src
 
