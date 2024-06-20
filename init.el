@@ -123,10 +123,7 @@
   (setq evil-want-C-i-jump nil)
   :config
   (evil-mode 1)
-  (dolist (mode '(eat-mode
-		  dired-mode
-		  magit-mode
-		  text-mode))
+  (dolist (mode '(eat-mode))
     (add-to-list 'evil-emacs-state-modes mode))
   (evil-set-initial-state 'org-mode 'normal))
 
