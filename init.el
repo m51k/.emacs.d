@@ -113,22 +113,31 @@
     "s"  'consult-line
     "es" 'consult-flymake))
 
-;; (use-package evil
-;;   :demand t
-;;   :init
-;;   (setq evil-want-keybinding nil)
-;;   (setq evil-want-integration t)
-;;   (setq evil-want-C-u-scroll t)
-;;   (setq evil-want-C-i-jump nil)
-;;   :config
-;;   (evil-mode 1)
-;;   (dolist (mode '(eshell-mode
-;; 		  dired-mode
-;; 		  magit-mode
-;; 		  text-mode))
-;;     (add-to-list 'evil-emacs-state-modes mode))
-;;   (evil-set-initial-state 'org-mode 'normal)
-;;   :delight evil-mode)
+(use-package evil
+  :demand t
+  :delight
+  :init
+  (setq evil-want-keybinding nil)
+  (setq evil-want-integration t)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  :config
+  (evil-mode 1)
+  (dolist (mode '(eat-mode
+		  dired-mode
+		  magit-mode
+		  text-mode))
+    (add-to-list 'evil-emacs-state-modes mode))
+  (evil-set-initial-state 'org-mode 'normal))
+
+(use-package evil-collection
+  :after evil
+  :demand t
+  :delight evil-collection-unimpaired-mode
+  :init
+  (setq evil-collection-setup-minibuffer t)
+  :config
+  (evil-collection-init))
 
 (use-package which-key
   :init (which-key-mode)
@@ -229,7 +238,18 @@
 (electric-pair-mode t)
 
 (use-package eat
-  :demand t)
+  :demand t
+  :general
+  (general-define-key
+   :states 'emacs
+   :prefix "C-w"
+   "q" 'evil-quit
+   "h" 'evil-window-left
+   "j" 'evil-window-down
+   "k" 'evil-window-up
+   "l" 'evil-window-right
+   "s" 'evil-window-split
+   "v" 'evil-window-vsplit))
 
 ;; (use-package lsp-mode
 ;;   :demand t
@@ -382,7 +402,7 @@
                 mode-line-buffer-identification
 		"  "
 		mode-line-position
-                "  "
+                " "
                 mode-line-modes
                 vc-mode
 		" "

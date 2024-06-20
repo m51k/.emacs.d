@@ -193,26 +193,39 @@ Specify Keybindings under this or per package.
 #+end_src
 
 ** Evil mode
-+Vim emulation, it's only used here for text/code editing, its default binds for anything else.+
-Commented for now because I got used to default binds somehow.
+Vim emulation, it's only used here for text/code editing, its default binds for anything else.
 #+begin_src emacs-lisp :tangle ./init.el
 
-  ;; (use-package evil
-  ;;   :demand t
-  ;;   :init
-  ;;   (setq evil-want-keybinding nil)
-  ;;   (setq evil-want-integration t)
-  ;;   (setq evil-want-C-u-scroll t)
-  ;;   (setq evil-want-C-i-jump nil)
-  ;;   :config
-  ;;   (evil-mode 1)
-  ;;   (dolist (mode '(eshell-mode
-  ;; 		  dired-mode
-  ;; 		  magit-mode
-  ;; 		  text-mode))
-  ;;     (add-to-list 'evil-emacs-state-modes mode))
-  ;;   (evil-set-initial-state 'org-mode 'normal)
-  ;;   :delight evil-mode)
+  (use-package evil
+    :demand t
+    :delight
+    :init
+    (setq evil-want-keybinding nil)
+    (setq evil-want-integration t)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    :config
+    (evil-mode 1)
+    (dolist (mode '(eat-mode
+  		  dired-mode
+  		  magit-mode
+  		  text-mode))
+      (add-to-list 'evil-emacs-state-modes mode))
+    (evil-set-initial-state 'org-mode 'normal))
+
+#+end_src
+
+** Evil collection
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package evil-collection
+    :after evil
+    :demand t
+    :delight evil-collection-unimpaired-mode
+    :init
+    (setq evil-collection-setup-minibuffer t)
+    :config
+    (evil-collection-init))
 
 #+end_src
 
@@ -383,8 +396,19 @@ Git interface.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package eat
-    :demand t)
-    
+    :demand t
+    :general
+    (general-define-key
+     :states 'emacs
+     :prefix "C-w"
+     "q" 'evil-quit
+     "h" 'evil-window-left
+     "j" 'evil-window-down
+     "k" 'evil-window-up
+     "l" 'evil-window-right
+     "s" 'evil-window-split
+     "v" 'evil-window-vsplit))
+
 #+end_src
 
 ** LSP
@@ -612,7 +636,7 @@ Who needs obsidian?
                   mode-line-buffer-identification
   		"  "
   		mode-line-position
-                  "  "
+                  " "
                   mode-line-modes
                   vc-mode
   		" "
