@@ -619,7 +619,7 @@ Who needs obsidian?
 ** Modeline
 #+begin_src emacs-lisp :tangle ./init.el
 
-  (setq mode-line-position (list "(%l:%C) %p"))
+  (setq mode-line-position (list "(%l:%C) %p of %I "))
   (setq-default mode-line-format
                 '("%e"
                   mode-line-front-space
@@ -636,6 +636,7 @@ Who needs obsidian?
                   mode-line-modes
                   vc-mode
   		" "
+  		"%-"
                   mode-line-misc-info
                   mode-line-end-spaces))
 

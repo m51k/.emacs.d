@@ -386,7 +386,7 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(setq mode-line-position (list "(%l:%C) %p"))
+(setq mode-line-position (list "(%l:%C) %p of %I "))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -403,6 +403,7 @@
                 mode-line-modes
                 vc-mode
 		" "
+		"%-"
                 mode-line-misc-info
                 mode-line-end-spaces))
 
