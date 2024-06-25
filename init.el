@@ -105,13 +105,19 @@
   :demand t
   :config
   (general-auto-unbind-keys)
+
   (general-create-definer global-leader
     :prefix "C-c")
   (global-leader
-    "t"  'eat
+    "t"  'eshell
     "ec" 'flymake-start
     "s"  'consult-line
-    "es" 'consult-flymake))
+    "es" 'consult-flymake)
+
+  (general-create-definer evil-leader
+    :keymaps '(normal insert visual)
+    :prefix "SPC"
+    :global-prefix "C-SPC"))
 
 (use-package evil
   :demand t
@@ -125,7 +131,8 @@
   (evil-mode 1)
   (dolist (mode '(eat-mode))
     (add-to-list 'evil-emacs-state-modes mode))
-  (evil-set-initial-state 'org-mode 'normal))
+  (evil-set-initial-state 'org-mode 'normal)
+  (evil-select-search-module 'evil-search-module 'isearch))
 
 (use-package evil-collection
   :after evil
@@ -166,7 +173,7 @@
 (use-package consult
   :demand t
   :config
-  (setq consult-narrow-key "<")
+  (setq consult-narrow-key "?")
   :general
   (global-leader
    "b" 'consult-buffer))
@@ -224,7 +231,9 @@
   :general
   (global-leader
     "pf" 'consult-project-extra-find
-    "po" 'consult-project-extra-find-other-window))
+    "po" 'consult-project-extra-find-other-window)
+  (evil-leader
+   "SPC" 'consult-project-extra-find))
 
 (setq electric-pair-pairs '(
                             (?\{ . ?\})
@@ -233,20 +242,6 @@
                             (?\" . ?\")
                             ))
 (electric-pair-mode t)
-
-(use-package eat
-  :demand t
-  :general
-  (general-define-key
-   :states 'emacs
-   :prefix "C-w"
-   "q" 'evil-quit
-   "h" 'evil-window-left
-   "j" 'evil-window-down
-   "k" 'evil-window-up
-   "l" 'evil-window-right
-   "s" 'evil-window-split
-   "v" 'evil-window-vsplit))
 
 ;; (use-package lsp-mode
 ;;   :demand t
@@ -370,18 +365,6 @@
         org-roam-ui-follow t
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
-
-;; (use-package evil-org
-;;   :after org
-;;   :demand t
-;;   :commands evil-org-mode
-;;   :delight evil-org-mode
-;;   :init
-;;   (add-hook 'org-mode-hook 'evil-org-mode)
-;;   :config
-;;   (add-hook 'evil-org-mode-hook
-;; 	    (lambda ()
-;; 	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))

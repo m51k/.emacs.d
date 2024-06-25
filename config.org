@@ -181,13 +181,19 @@ Specify Keybindings under this or per package.
     :demand t
     :config
     (general-auto-unbind-keys)
+
     (general-create-definer global-leader
       :prefix "C-c")
     (global-leader
-      "t"  'eat
+      "t"  'eshell
       "ec" 'flymake-start
       "s"  'consult-line
-      "es" 'consult-flymake))
+      "es" 'consult-flymake)
+
+    (general-create-definer evil-leader
+      :keymaps '(normal insert visual)
+      :prefix "SPC"
+      :global-prefix "C-SPC"))
 
 #+end_src
 
@@ -207,7 +213,8 @@ Vim emulation, it's only used here for text/code editing, its default binds for 
     (evil-mode 1)
     (dolist (mode '(eat-mode))
       (add-to-list 'evil-emacs-state-modes mode))
-    (evil-set-initial-state 'org-mode 'normal))
+    (evil-set-initial-state 'org-mode 'normal)
+    (evil-select-search-module 'evil-search-module 'isearch))
 
 #+end_src
 
@@ -280,7 +287,7 @@ In case I forget some binds.
   (use-package consult
     :demand t
     :config
-    (setq consult-narrow-key "<")
+    (setq consult-narrow-key "?")
     :general
     (global-leader
      "b" 'consult-buffer))
@@ -370,7 +377,9 @@ Git interface.
     :general
     (global-leader
       "pf" 'consult-project-extra-find
-      "po" 'consult-project-extra-find-other-window))
+      "po" 'consult-project-extra-find-other-window)
+    (evil-leader
+     "SPC" 'consult-project-extra-find))
 
 #+end_src
 
@@ -388,25 +397,6 @@ Git interface.
 #+end_src
 
 * Programming
-** EAT
-#+begin_src emacs-lisp :tangle ./init.el
-
-  (use-package eat
-    :demand t
-    :general
-    (general-define-key
-     :states 'emacs
-     :prefix "C-w"
-     "q" 'evil-quit
-     "h" 'evil-window-left
-     "j" 'evil-window-down
-     "k" 'evil-window-up
-     "l" 'evil-window-right
-     "s" 'evil-window-split
-     "v" 'evil-window-vsplit))
-
-#+end_src
-
 ** LSP
 Eglot is really simple to configure, but I left my old lsp-mode config here in case I need to switch, since the latter has more features (that I dont use at the moment).
 #+begin_src emacs-lisp :tangle ./init.el
@@ -587,23 +577,6 @@ Who needs obsidian?
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
-
-#+end_src
-
-** Org Mode Evil compatibility
-#+begin_src emacs-lisp :tangle ./init.el
-
-  ;; (use-package evil-org
-  ;;   :after org
-  ;;   :demand t
-  ;;   :commands evil-org-mode
-  ;;   :delight evil-org-mode
-  ;;   :init
-  ;;   (add-hook 'org-mode-hook 'evil-org-mode)
-  ;;   :config
-  ;;   (add-hook 'evil-org-mode-hook
-  ;; 	    (lambda ()
-  ;; 	      (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))))
 
 #+end_src
 
