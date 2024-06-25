@@ -620,8 +620,14 @@ Most important part of the config.
 #+begin_src emacs-lisp :tangle ./init.el
 
   (use-package moe-theme
-    :demand t
-    :config
-    (load-theme 'moe-dark :no-confirm))
+  :demand t
+  :config
+  (load-theme 'moe-dark :no-confirm))
+
+  (use-package rainbow-mode
+    :demand t)
+
+  ;; (add-to-list 'custom-theme-load-path (expand-file-name "~/Projects/oxocarbon-emacs"))
+  ;; (load-theme 'oxocarbon :no-confirm)
 
 #+end_src

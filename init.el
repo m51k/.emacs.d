@@ -390,7 +390,12 @@
                 mode-line-misc-info
                 mode-line-end-spaces))
 
-(use-package moe-theme
-  :demand t
-  :config
-  (load-theme 'moe-dark :no-confirm))
+;; (use-package moe-theme
+;; :demand t
+;; :config
+;; (load-theme 'moe-dark :no-confirm))
+
+(use-package rainbow-mode
+  :demand t)
+(add-to-list 'custom-theme-load-path (expand-file-name "~/Projects/oxocarbon-emacs"))
+(load-theme 'oxocarbon :no-confirm)
