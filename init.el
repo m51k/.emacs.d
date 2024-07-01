@@ -112,36 +112,7 @@
     "t"  'eshell
     "ec" 'flymake-start
     "s"  'consult-line
-    "es" 'consult-flymake)
-
-  (general-create-definer evil-leader
-    :keymaps '(normal insert visual)
-    :prefix "SPC"
-    :global-prefix "C-SPC"))
-
-(use-package evil
-  :demand t
-  :delight
-  :init
-  (setq evil-want-keybinding nil)
-  (setq evil-want-integration t)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (dolist (mode '(eat-mode))
-    (add-to-list 'evil-emacs-state-modes mode))
-  (evil-set-initial-state 'org-mode 'normal)
-  (evil-select-search-module 'evil-search-module 'isearch))
-
-(use-package evil-collection
-  :after evil
-  :demand t
-  :delight evil-collection-unimpaired-mode
-  :init
-  (setq evil-collection-setup-minibuffer t)
-  :config
-  (evil-collection-init))
+    "es" 'consult-flymake))
 
 (use-package which-key
   :init (which-key-mode)
@@ -202,6 +173,15 @@
   :config
   (global-corfu-mode))
 
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  :custom
+  (kind-icon-blend-background t)
+  (kind-icon-default-face 'corfu-default) ; only needed with blend-background
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+
 (use-package all-the-icons-dired
   :demand t
   :hook
@@ -231,9 +211,7 @@
   :general
   (global-leader
     "pf" 'consult-project-extra-find
-    "po" 'consult-project-extra-find-other-window)
-  (evil-leader
-   "SPC" 'consult-project-extra-find))
+    "po" 'consult-project-extra-find-other-window))
 
 (setq electric-pair-pairs '(
                             (?\{ . ?\})
@@ -390,12 +368,8 @@
                 mode-line-misc-info
                 mode-line-end-spaces))
 
-;; (use-package moe-theme
-;; :demand t
-;; :config
-;; (load-theme 'moe-dark :no-confirm))
-
 (use-package rainbow-mode
   :demand t)
+
 (add-to-list 'custom-theme-load-path (expand-file-name "~/Projects/oxocarbon-emacs"))
 (load-theme 'oxocarbon :no-confirm)
