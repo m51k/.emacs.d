@@ -304,6 +304,9 @@
   :demand t
   :after tree-sitter)
 
+(use-package markdown-mode
+  :demand t)
+
 (use-package org
   :ensure (:wait t)
   :demand t
@@ -371,5 +374,15 @@
 (use-package rainbow-mode
   :demand t)
 
-(add-to-list 'custom-theme-load-path (expand-file-name "~/Projects/oxocarbon-emacs"))
-(load-theme 'oxocarbon :no-confirm)
+(use-package moe-theme
+  :demand t)
+
+;; (add-to-list 'custom-theme-load-path "~/Projects/oxocarbon-emacs/")
+;; (add-to-list 'load-path "~/Projects/oxocarbon-emacs/")
+;; (require 'oxocarbon-theme)
+;; (load-theme 'oxocarbon-dark :no-confirm)
+
+(use-package oxocarbon-theme
+  :ensure (oxocarbon-theme :host github :repo "m51k/oxocarbon-emacs")
+  :config
+  (load-theme 'oxocarbon-dark :no-confirm))

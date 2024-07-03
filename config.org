@@ -497,6 +497,13 @@ Syntax highlighting and indentation.
 #+end_src
 
 * Notes & Documentation
+** Markdown Mode
+#+begin_src emacs-lisp :tangle ./init.el
+
+  (use-package markdown-mode
+    :demand t)
+
+#+end_src
 ** Org Mode
 #+begin_src emacs-lisp :tangle ./init.el
 
@@ -595,7 +602,17 @@ Most important part of the config.
   (use-package rainbow-mode
     :demand t)
 
-  (add-to-list 'custom-theme-load-path (expand-file-name "~/Projects/oxocarbon-emacs"))
-  (load-theme 'oxocarbon :no-confirm)
+  (use-package moe-theme
+    :demand t)
+
+  ;; (add-to-list 'custom-theme-load-path "~/Projects/oxocarbon-emacs/")
+  ;; (add-to-list 'load-path "~/Projects/oxocarbon-emacs/")
+  ;; (require 'oxocarbon-theme)
+  ;; (load-theme 'oxocarbon-dark :no-confirm)
+
+  (use-package oxocarbon-theme
+    :ensure (oxocarbon-theme :host github :repo "m51k/oxocarbon-emacs")
+    :config
+    (load-theme 'oxocarbon-dark :no-confirm))
 
 #+end_src
