@@ -95,8 +95,8 @@
   :init
   (vertico-mode)
   :config
-  (setq vertico-cycle t)
-  (setq vertico-resize nil))
+  (setq vertico-cycle t
+	vertico-resize nil))
 
 (savehist-mode 1)
 
@@ -106,7 +106,6 @@
   (marginalia-mode 1))
 
 (use-package orderless
-  :demand t
   :config
   (setq completion-styles '(orderless basic)))
 
@@ -149,34 +148,51 @@
 (use-package org
   :mode (("\\.org$" . org-mode))
   :config
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-agenda-files '("~/Org/agenda.org"))
+  (setq org-src-fontify-natively t
+	org-src-tab-acts-natively t
+	org-agenda-files '("~/Org/agenda.org"))
   :general
   (global-leader
-   "a" 'org-agenda))
+    "oa" 'consult-org-agenda
+    "oh" 'consult-org-heading))
 
 (use-package org-roam
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory "~/Documents/Notes/100 Zettelkasten")
+  (org-roam-completion-everywhere t)
+  (org-roam-directory "~/Documents/Notes/")
   (org-roam-capture-templates
-   '(("d" "default"
-      plain (file "~/Documents/Notes/400 Templates/base-zettel.org")
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: %U\n\n")
+   '(("f" "fleeting"
+      plain (file "~/Documents/Notes/templates/base-zettel.org")
+      :if-new (file+head "fleeting/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ("m" "main"
+      plain (file "~/Documents/Notes/templates/base-zettel.org")
+      :if-new (file+head "main/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ("r" "reference"
+      plain (file "~/Documents/Notes/templates/base-zettel.org")
+      :if-new (file+head "reference/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
       :unnarrowed t)))
+  (org-roam-node-display-template
+   (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
   :config
+  (cl-defmethod org-roam-node-type ((node org-roam-node))
+  "Return the TYPE of NODE."
+  (condition-case nil
+      (file-name-nondirectory
+       (directory-file-name
+        (file-name-directory
+         (file-relative-name (org-roam-node-file node) org-roam-directory))))
+    (error "")))
   (org-roam-setup)
   :general
   (global-leader
    "nl" 'org-roam-buffer-toggle
-   "nf" 'org-roam-node-find
    "ni" 'org-roam-node-insert))
 
 (use-package consult-org-roam
-   :ensure t
-   :after org-roam
    :init
    (require 'consult-org-roam)
    ;; Activate the minor mode
@@ -194,16 +210,23 @@
    (consult-customize
     consult-org-roam-forward-links
     :preview-key "M-.")
-   :bind
-   ;; Define some convenient keybindings as an addition
-   ("C-c n e" . consult-org-roam-file-find)
-   ("C-c n b" . consult-org-roam-backlinks)
-   ("C-c n B" . consult-org-roam-backlinks-recursive)
-   ("C-c n l" . consult-org-roam-forward-links)
-   ("C-c n r" . consult-org-roam-search))
+   :general
+   (global-leader
+     "nf" 'consult-org-roam-file-find
+     "nb" 'consult-org-roam-backlinks
+     "nB" 'consult-org-roam-backlinks-recursive
+     "nl" 'consult-org-roam-forwards-links
+     "ns" 'consult-org-roam-search))
+
+(use-package org-roam-ui
+    :after org-roam
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
 (use-package magit
-  :after general
   :general
   (global-leader
     "gs" 'magit))
@@ -211,7 +234,6 @@
 (use-package project)
 
 (use-package consult-project-extra
-  :after general
   :general
   (global-leader
     "pf" 'consult-project-extra-find
