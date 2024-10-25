@@ -150,11 +150,19 @@
   :config
   (setq org-src-fontify-natively t
 	org-src-tab-acts-natively t
-	org-agenda-files '("~/Org/agenda.org"))
+	org-agenda-files '("~/Documents/Notes/agenda.org")
+	org-capture-templates
+	'(("f" "Fleeting" entry (file "~/Documents/Notes/inbox.org")
+           "* %?\n")))
+  (defun m51k/org-capture-fleeting ()
+    (interactive)
+    (org-capture nil "f"))
   :general
   (global-leader
     "oa" 'consult-org-agenda
-    "oh" 'consult-org-heading))
+    "oh" 'consult-org-heading
+    "oc" 'org-capture
+    "of" 'm51k/org-capture-fleeting))
 
 (use-package org-roam
   :init
@@ -163,17 +171,15 @@
   (org-roam-completion-everywhere t)
   (org-roam-directory "~/Documents/Notes/")
   (org-roam-capture-templates
-   '(("f" "fleeting"
-      plain (file "~/Documents/Notes/templates/base-zettel.org")
-      :if-new (file+head "fleeting/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
-     ("m" "main"
-      plain (file "~/Documents/Notes/templates/base-zettel.org")
-      :if-new (file+head "main/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+   '(("m" "main"
+      plain (file "~/Documents/Notes/main/main-template.org")
+      :if-new (file+head "main/${slug}.org"
+			 "#+title: ${title}\n")
       :unnarrowed t)
      ("r" "reference"
-      plain (file "~/Documents/Notes/templates/base-zettel.org")
-      :if-new (file+head "reference/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      plain (file "~/Documents/Notes/reference/reference-template.org")
+      :if-new (file+head "reference/${title}.org"
+			 "#+title: ${title}\n")
       :unnarrowed t)))
   (org-roam-node-display-template
    (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
