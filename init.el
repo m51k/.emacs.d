@@ -55,6 +55,7 @@
   (auto-package-update-at-time "09:00"))
 
 (setq mode-line-position (list "(%l:%C) %p of %I "))
+(setq evil-mode-line-format '(before . mode-line-front-space))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -71,18 +72,42 @@
                 mode-line-modes
                 vc-mode
 		" "
-		"%-"
                 mode-line-misc-info
                 mode-line-end-spaces))
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  (setq)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
 (use-package general
+  :after evil
   :config
   (general-auto-unbind-keys)
-
   (general-create-definer global-leader
-    :prefix "C-c")
+    :keymaps '(normal insert visual emacs)
+    :prefix "C-c"
+    :global-prefix "C-c")
   (global-leader
     "t"  'eshell))
 
@@ -150,87 +175,16 @@
   :config
   (setq org-src-fontify-natively t
 	org-src-tab-acts-natively t
-	org-agenda-files '("~/Documents/Notes/agenda.org")
+	org-agenda-files (directory-files-recursively "~/notes/" "\\.org$")
 	org-capture-templates
-	'(("f" "Fleeting" entry (file "~/Documents/Notes/inbox.org")
+	'(("r" "Random" entry (file "~/notes/inbox.org")
            "* %?\n")))
-  (defun m51k/org-capture-fleeting ()
-    (interactive)
-    (org-capture nil "f"))
   :general
   (global-leader
-    "oa" 'consult-org-agenda
+    "os" 'consult-org-agenda
+    "oa" 'org-agenda
     "oh" 'consult-org-heading
-    "oc" 'org-capture
-    "of" 'm51k/org-capture-fleeting))
-
-(use-package org-roam
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-completion-everywhere t)
-  (org-roam-directory "~/Documents/Notes/")
-  (org-roam-capture-templates
-   '(("m" "main"
-      plain (file "~/Documents/Notes/main/main-template.org")
-      :if-new (file+head "main/${slug}.org"
-			 "#+title: ${title}\n")
-      :unnarrowed t)
-     ("r" "reference"
-      plain (file "~/Documents/Notes/reference/reference-template.org")
-      :if-new (file+head "reference/${title}.org"
-			 "#+title: ${title}\n")
-      :unnarrowed t)))
-  (org-roam-node-display-template
-   (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
-  :config
-  (cl-defmethod org-roam-node-type ((node org-roam-node))
-  "Return the TYPE of NODE."
-  (condition-case nil
-      (file-name-nondirectory
-       (directory-file-name
-        (file-name-directory
-         (file-relative-name (org-roam-node-file node) org-roam-directory))))
-    (error "")))
-  (org-roam-setup)
-  :general
-  (global-leader
-   "nl" 'org-roam-buffer-toggle
-   "ni" 'org-roam-node-insert))
-
-(use-package consult-org-roam
-   :init
-   (require 'consult-org-roam)
-   ;; Activate the minor mode
-   (consult-org-roam-mode 1)
-   :custom
-   ;; Use `ripgrep' for searching with `consult-org-roam-search'
-   (consult-org-roam-grep-func #'consult-ripgrep)
-   ;; Configure a custom narrow key for `consult-buffer'
-   (consult-org-roam-buffer-narrow-key ?r)
-   ;; Display org-roam buffers right after non-org-roam buffers
-   ;; in consult-buffer (and not down at the bottom)
-   (consult-org-roam-buffer-after-buffers t)
-   :config
-   ;; Eventually suppress previewing for certain functions
-   (consult-customize
-    consult-org-roam-forward-links
-    :preview-key "M-.")
-   :general
-   (global-leader
-     "nf" 'consult-org-roam-file-find
-     "nb" 'consult-org-roam-backlinks
-     "nB" 'consult-org-roam-backlinks-recursive
-     "nl" 'consult-org-roam-forwards-links
-     "ns" 'consult-org-roam-search))
-
-(use-package org-roam-ui
-    :after org-roam
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
+    "oc" 'org-capture))
 
 (use-package magit
   :general
@@ -245,19 +199,7 @@
     "pf" 'consult-project-extra-find
     "po" 'consult-project-extra-find-other-window))
 
-(use-package moe-theme
+(use-package ef-themes
+  :ensure t
   :config
-  (load-theme 'moe-dark :no-confirm))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(consult-project-extra magit org-roam general which-key vertico orderless no-littering moe-theme marginalia embark-consult corfu auto-package-update)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+  (load-theme 'ef-owl t))
