@@ -31,9 +31,10 @@
 (set-fringe-mode 0)
 (menu-bar-mode -1)
 
-(set-face-attribute 'default nil :font "Jetbrains Mono" :height 100)
+(set-face-attribute 'default nil :font "Jetbrains Mono Nerd Font" :height 100)
 
 (global-display-line-numbers-mode t)
+(setq display-line-numbers-type 'relative)
 
 (dolist (mode '(org-mode-hook
                 eshell-mode-hook))
@@ -55,7 +56,6 @@
   (auto-package-update-at-time "09:00"))
 
 (setq mode-line-position (list "(%l:%C) %p of %I "))
-(setq evil-mode-line-format '(before . mode-line-front-space))
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -83,7 +83,6 @@
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
-  (setq)
   :config
   (evil-mode 1)
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
@@ -93,7 +92,8 @@
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-  (evil-set-initial-state 'messages-buffer-mode 'normal))
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
 
 (use-package evil-collection
   :after evil
@@ -101,13 +101,16 @@
   (evil-collection-init))
 
 (use-package general
-  :after evil
   :config
   (general-auto-unbind-keys)
   (general-create-definer global-leader
     :keymaps '(normal insert visual emacs)
     :prefix "C-c"
     :global-prefix "C-c")
+  (general-create-definer alt-leader
+    :keymaps '(normal insert visual emacs)
+    :prefix "C-x"
+    :global-prefix "C-x")
   (global-leader
     "t"  'eshell))
 
@@ -195,11 +198,10 @@
 
 (use-package consult-project-extra
   :general
-  (global-leader
+  (alt-leader
     "pf" 'consult-project-extra-find
     "po" 'consult-project-extra-find-other-window))
 
-(use-package ef-themes
-  :ensure t
+(use-package moe-theme
   :config
-  (load-theme 'ef-owl t))
+  (load-theme 'moe-dark :no-confirm))
