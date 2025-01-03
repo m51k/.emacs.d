@@ -31,7 +31,7 @@
 (set-fringe-mode 0)
 (menu-bar-mode -1)
 
-(set-face-attribute 'default nil :font "Jetbrains Mono Nerd Font" :height 100)
+(set-face-attribute 'default nil :font "Jetbrains Mono" :height 100)
 
 (global-display-line-numbers-mode t)
 (setq display-line-numbers-type 'relative)
@@ -188,11 +188,6 @@
     "oa" 'org-agenda
     "oh" 'consult-org-heading
     "oc" 'org-capture))
-
-(use-package magit
-  :general
-  (global-leader
-    "gs" 'magit))
 
 (use-package project)
 
